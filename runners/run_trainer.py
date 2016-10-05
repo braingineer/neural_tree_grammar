@@ -1,14 +1,14 @@
 """An implemenation of FERGUS's supertagger
 
 Usage:
-    run_trainer.py fergusr
-    run_trainer.py fergusn
+    run_trainer.py fergusr 
+    run_trainer.py fergusn 
     run_trainer.py (-h | --help)
 
-    fergusr                     train the fergus-r model
-    fergusn                     train the fergus-n model
-
-
+    fergusr                   train the fergus-r model
+    fergusn                   train the fergus-n model
+    
+    
 Notes: 
 as per Bangalore & Rambow, 2000 
 "Exploiting a Probabilistic Hierarchical Model for Generation"

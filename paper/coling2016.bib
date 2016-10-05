@@ -28,7 +28,7 @@
 }
 
 @article{lewis2014improved,
-  title={Improved CCG parsing with semi-supervised supertagging},
+  title={Improved {CCG} parsing with semi-supervised supertagging},
   author={Lewis, Mike and Steedman, Mark},
   journal={Transactions of the Association for Computational Linguistics},
   volume={2},
@@ -118,20 +118,14 @@
   year={2015}
 }
 
-@article{ZhangLL15,
-  author    = {Xingxing Zhang and
-               Liang Lu and
-               Mirella Lapata},
-  title     = {Tree Recurrent Neural Networks with Application to Language Modeling},
-  journal   = {CoRR},
-  volume    = {abs/1511.00060},
-  year      = {2015},
-  url       = {http://arxiv.org/abs/1511.00060},
-  timestamp = {Tue, 01 Dec 2015 19:22:34 +0100},
-  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/corr/ZhangLL15},
-  bibsource = {dblp computer science bibliography, http://dblp.org},
-  abstract = {Long Short-Term Memory (LSTM) networks, a type of recurrent neural network with a more complex computational unit, have been successfully applied to a variety of sequence modeling tasks. In this paper we develop Tree Long Short-Term Memory (TreeLSTM), a neural network model based on LSTM, which is designed to predict a tree rather than a linear sequence. TreeLSTM defines the probability of a sentence by estimating the generation probability of its dependency tree. At each time step, a node is generated based on the representation of the generated sub-tree. We further enhance the modeling power of TreeLSTM by explicitly representing the correlations between left and right dependents. Application of our model to the MSR sentence completion challenge achieves results beyond the current state of the art. We also report results on dependency parsing reranking achieving competitive performance.},
+@article{zhang2016top,
+  title={Top-down tree long short-term memory networks},
+  author={Zhang, Xingxing and Lu, Liang and Lapata, Mirella},
+  journal={arXiv preprint arXiv:1511.00060},
+  pages={0--5},
+  year={2016}
 }
+
 @article{Tai2015,
 abstract = {A Long Short-Term Memory (LSTM) network is a type of recurrent neural network architecture which has recently obtained strong results on a variety of sequence modeling tasks. The only underlying LSTM structure that has been explored so far is a linear chain. However, natural language exhibits syntactic properties that would naturally combine words to phrases. We introduce the Tree-LSTM, a generalization of LSTMs to tree-structured network topologies. Tree-LSTMs outperform all existing systems and strong LSTM baselines on two tasks: predicting the semantic relatedness of two sentences (SemEval 2014, Task 1) and sentiment classification (Stanford Sentiment Treebank).},
 archivePrefix = {arXiv},
@@ -168,6 +162,20 @@ url = {http://wuawua.googlecode.com/files/Learning Continuous Phrase Representat
 year = {2010}
 }
 
+
+@article{bowman2016fast,
+  title={A fast unified model for parsing and sentence understanding},
+  author={Bowman, Samuel R and Gauthier, Jon and Rastogi, Abhinav and Gupta, Raghav and Manning, Christopher D and Potts, Christopher},
+  journal={arXiv preprint arXiv:1603.06021},
+  year={2016}
+}
+
+@article{dyer2016recurrent,
+  title={Recurrent neural network grammars},
+  author={Dyer, Chris and Kuncoro, Adhiguna and Ballesteros, Miguel and Smith, Noah A},
+  journal={arXiv preprint arXiv:1602.07776},
+  year={2016}
+}
 
 @article{Schabes1995,
 abstract = {Tree insertion grammar (TIG) is a tree-basedformalism that makes use of tree substitution and tree adjunction. TIG is related to tree adjoining grammar. However, the adjunction permitted in TIG is sufficiently restricted that TIGs only derive context-free languages and TIGs have the same cubic-time worst-case complexity bounds for recognition and parsing as context-free grammars. An efficient Earley-style parserfor TIGs is presented. Any context-free grammar (CFG) can be converted into a lexicalized tree insertion grammar (LTIG) that generates the same trees. A constructive procedure is presented for converting a CFG into a left anchored (i.e., word initial) LTIG that preserves ambiguity and generates the same trees. The L,TIGcreated can be represented compactly by taking advantage of sharing between the elementary trees in it. Methods of converting CFGs into left anchored CFGs, e.g., the methods of Greibach and Rosenkrantz, do not preserve the trees produced and result in very large output grammars. For the purpose of experimental evaluation, the LTIG lexicalization procedure was applied to eight different CFGs for subsets of English. The LTIGs created were smaller than the original CFGs. Using an implementation of the Earley-style TIG parser that was specialized for left anchored LTIGs, it was possible to parse more quickly with the LTIGs than with the original CFGs.},

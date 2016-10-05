@@ -27,7 +27,7 @@ from keras.utils.visualize_util import plot as kplot
 
 ### project imports
 from .igor import Igor
-from ..common import make_convolutional_embedding, make_logger
+from ..common import make_convolutional_embedding, make_logger, make_token_embedding
 
 
 try:
@@ -99,7 +99,14 @@ class FergusNModel(object):
         Arg:
             theano_kwargs as dict for debugging theano or submitting something custom
         '''
-        make_convolutional_embedding(self.igor)
+        
+        if self.igor.embedding_type == "convolutional":
+            make_convolutional_embedding(self.igor)
+        elif self.igor.embedding_type == "token":
+            make_token_embedding(self.igor)
+        else:
+            raise Exception("Incorrect embedding type")
+        
         B = self.igor.batch_size
         spine_input_shape = (B, self.igor.max_num_supertags) 
         child_input_shape = (B, 1)

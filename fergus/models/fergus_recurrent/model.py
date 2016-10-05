@@ -26,7 +26,7 @@ from ikelos.data import Vocabulary, VocabManager
 
 
 from .igor import Igor
-from ..common import make_convolutional_embedding, make_logger
+from ..common import make_convolutional_embedding, make_logger, make_token_embedding
 from ...configs import global_config
 
 try:
@@ -89,8 +89,12 @@ class FergusRModel(object):
             Output:
                 - Distribution over supertags for node_t
         """
-        
-        make_convolutional_embedding(self.igor)
+        if self.igor.embedding_type == "convolutional":
+            make_convolutional_embedding(self.igor)
+        elif self.igor.embedding_type == "token":
+            make_token_embedding(self.igor)
+        else:
+            raise Exception("Incorrect embedding type")
         
         
         spine_input_shape = (self.igor.batch_size,

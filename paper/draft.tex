@@ -586,12 +586,11 @@ The prefix tree is greedily searched with 32 beams.
 
 In this work, we make two contributions to stochastic tree modeling and evaluate them on a supertag prediction and linearization task. 
 %
-The evaluation uses the Wall Street Journal sections of the Penn Treebank which have been previously used for statistical tree grammars \cite{chiang2000statistical}\footnote{A possible additional data source, the data from the 2011 Shared Task on Surface Realization, was not available}.
+The evaluation uses the Wall Street Journal sections of the Penn Treebank which have been previously used for evaluating statistical tree grammars \cite{chiang2000statistical}\footnote{A possible additional data source, the data from the 2011 Shared Task on Surface Realization, was not available}.
 %
 Our data pipeline transforms the treebank into a collection of elementary trees and derivation tree---the structured relationships required to compose them into the observed data (see \ref{}).
 %
-Abstracting syntactic information from the derivation tree leads to the unlabeled dependency trees our models assume as input. 
-
+Abstracting syntactic information from the derivation tree structure leads to the unlabeled dependency trees our models assume as input. 
 
 We evaluate the convolutional coding of the supertags by comparing it against standard embedding techniques.
 %
@@ -622,27 +621,94 @@ The metrics used in the linearization task were taken from previous work, who ar
 
 \subsection{Results}
 
+Table \ref{table:accresults} shows the results of supertag classification using the stochastic tree models is shown. 
+%
+The scores are grouped in first by the model and then by the embedding method. 
+%
+The accuracy of each model is additionally broken down by how often it got the various components correct. 
+%
+The root category and role refer to the syntactic label and grammatical role of a supertag. 
+%
+The leaf category refers to the syntactic label of the leaf to which a lexical item would attach---essentially, this is the part of speech of the lexical item.
+%
+All differences between model are significant using a Paired-Sample t-test ($p<10^{5}$)
+
+The Fergus-N model out-performed the Fergus-R model on supertag classification with convolutional supertag embeddings, but the Fergus-R model performed much closer to that of Fergus-N on the individual components. 
 
 
 \begin{figure}
 \centering
-\begin{tabular}{|l|p{2cm}|p{1.5cm}|}
+\begin{tabular}{|l|p{2cm}|p{2cm}|p{2.3cm}|p{2cm}|p{2.3cm}|}
 \hline
-Model & Test Set Size & Accuracy \\ \hline
-Fergus-Penn & 100 & 0.749 \\
-\hline \hline
-Fergus-N $Top_{40}$  & 2187 & 0.699 \\
+Model & Embedding & Supertag & Root Category & Root Role & Leaf Category  \\ \hline
+Fergus-N &  Convolution &  57.4\% & 81.8\% & 81.0\% & 86.8\% \\ \cline{2-6}
+         &  Token       &  XX & XX & XX & \\ \cline{2-6}
+\hline
+Fergus-R &  Convolution &  36.4\% & 76.9\% & 78.3\% & 80.8\% \\ \cline{2-6}
+         &  Token       &  XX & XX & XX & \\ \cline{2-6}
 \hline
 \end{tabular}
-\label{table:results}
-\caption{ }
+\label{table:accresults}
+\caption{Classification accuracy by supertag and its individual properties}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tabular}{|l|p{2cm}|p{1.5cm}|r|}
+\hline
+Model & Embedding & Beam Type & Accuracy \\ \hline
+FERGUS & n.a. & n.a. & 74.9 \% \\
+\hline \hline
+Fergus-N & Convolution & $Top_{all}$  & 68.9\% \\ \cline{3-4}
+         &             & $Best_{all}$ & 76.4\% \\ \cline{2-4}
+         & Token       & $Top_{all}$  & XX\% \\ \cline{3-4}
+         &             & $Best_{all}$ & XX\% \\ \cline{3-4}
+\hline
+Fergus-R & Convolution & $Top_{all}$  & 71.9\% \\ \cline{3-4}
+         &             & $Best_{all}$ & 78.9\% \\ \cline{2-4}
+         & Token       & $Top_{all}$  & XX \% \\ \cline{3-4}
+         &             & $Best_{all}$ & XX \% \\ \cline{3-4}
+\hline
+\end{tabular}
+\label{table:linresults}
+\caption{Shown above as accuraccy is the percentage of tokens in the linearized strings that are in correct positions according to an edit distance measure.}
 \end{figure}
 
 \section{Related Work}
 \label{sec:relatedwork}
 
+There are several lines of related work which explore stochastic tree models, ranging exploration with recurrent neural networks to agglomerative pairwise associations. 
+%
+Most similar to ours, is the top down tree structure of \newcite{zhang2016top}.
+%
+In this model, first, two long short-term memory (LSTM) networks are used to make branch exploration decisions, and then an additional two LSTM networks are used to continue along these branches. 
+%
+The work of \newcite{Tai2015} similarly use an LSTM, but instead work from the leaves upward to merge the hidden states of children inside the recurrent step. 
+%
+The upward merging of children to form representations for parents has also been studied as pairwise agglomerations using recursive neural networks \cite{Socher2010}.
+
+A growing body of work investigates modeling long distance relationships using efficient stacks in modern neural architecture. 
+%
+\newcite{dyer2015transition} utilize an indexable LSTM as a neural stack for transition-based parsing.  
+%
+Similarly, \newcite{bowman2016fast} utilize both a stack and buffer for sentence comprehension by utilizing an indexable structure and performing computations with indices to these structures. 
+%
+Finally, recent work models long distance relationships using the dynamic composability in ApolloCaffe, a fork of the Caffe library \cite{jia2014caffe}, to build different network structures based on parse trees \cite{Andreas2016LearningTC}.
+
 \section{Conclusion}
 \label{sec:conclusion}
+
+While many neural models of grammar have focused on parsing, there has been relatively less attention on generation.
+%
+This is in large part due to the different kinds of decisions that have to be made in order for generation to work. 
+
+
+The models outlined in this paper push forward methodologies for modeling tree grammars in neural networks. 
+
+
+A lot of work has to be done to take advantage of deep learning and translate that to tasks beyond parsing, especially language production tasks.
+
+This is a first step in a larger research program of stochastic generation models with the kind of generalization that deep learning techniques like word embeddings and recurrent neural networks give you. 
 
 
 

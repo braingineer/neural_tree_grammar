@@ -173,8 +173,6 @@ class MRecurrent(object):
         pmap = {-1:0}
         nmap = {}
         out = []
-        import pdb
-        pdb.set_trace()
         # child, parent id, head id, daughter ids
         for i, (child, pid, hid, dids) in enumerate(root.sequence):
             out.append((pmap[pid], hid, dids))

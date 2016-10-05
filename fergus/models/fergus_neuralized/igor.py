@@ -321,6 +321,7 @@ class Igor(DataServer):
             os.makedirs(save_dir)
         
         config = global_config()
+        self.embedding_type = config['embedding_mode']
         data_dir = config['data_dir']
         self.vocman_file = os.path.join(data_dir, self.vocman_file)
         self.vocabs = VocabManager.from_file(self.vocman_file)
