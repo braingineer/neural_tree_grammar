@@ -1,0 +1,7 @@
+*.db
+*.pkl
+*.log
+*.md
+*.pyc
+*.vocab
+*.h5

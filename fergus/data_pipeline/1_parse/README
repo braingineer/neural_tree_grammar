@@ -1,0 +1,3 @@
+merged -> all files from a single folder in 1 file
+preprocessed -> Stanford Coordination Transformer ran over the files
+final -> removed extra stanford parser stuff
