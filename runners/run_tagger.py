@@ -78,8 +78,8 @@ if __name__ == '__main__':
     if sys.argv[1].lower() == 'fergusn':
         dbname = "fergus_n_{}_{}".format(config['tag_mode'], config['data_store_db'])
         config['data_store_db'] = os.path.join(config['data_dir'], dbname)
-
         run(Tagger.fergusn, config)
+
     elif sys.argv[1].lower() == 'fergusr':
         dbname = "fergus_r_{}_{}".format(config['tag_mode'], config['data_store_db'])
         config['data_store_db'] = os.path.join(config['data_dir'], dbname)                                                

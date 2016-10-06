@@ -141,8 +141,9 @@ class FergusRModel(object):
         F_probability = ProbabilityTensor(name='predictions', 
                                           dense_function=Dense(**predict_params()))
         ### composition functions 
-
-        F_softdaughters = compose(Distribute(SoftAttention(name='softdaughter'), name='distribute_softdaughter'),
+    
+        F_softdaughters = compose(LambdaMask(lambda x, mask: None, name='remove_attention_mask'),
+                                  Distribute(SoftAttention(name='softdaughter'), name='distribute_softdaughter'),
                                   F_embedword)
 
         F_align = compose(Distribute(Dropout(p_mlp)),
@@ -210,7 +211,7 @@ class FergusRModel(object):
         self.logger.info("+ Model Checkpoint: {}".format(checkpoint_fp))
         
         callbacks += [ModelCheckpoint(filepath=checkpoint_fp, verbose=1, save_best_only=True)]
-        callbacks += [LearningRateScheduler(lambda epoch: self.igor.LR * 0.99**(epoch%15))]
+        callbacks += [LearningRateScheduler(lambda epoch: self.igor.LR * 0.9**(epoch%15))]
         self.model.fit_generator(generator=train_data, samples_per_epoch=N, nb_epoch=E,
                                  callbacks=callbacks, verbose=1,
                                  validation_data=dev_data,
