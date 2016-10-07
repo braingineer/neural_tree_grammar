@@ -22,7 +22,7 @@ def make_logger(igor, loggername):
 
     if igor.logshell_level != "off":
         sh = logging.StreamHandler()
-        sh.setLevel(levels[igor.logfile_level])
+        sh.setLevel(levels[igor.logshell_level])
         logger.addHandler(sh)
 
     return logger

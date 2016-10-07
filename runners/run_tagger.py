@@ -1,4 +1,4 @@
-"""Supertagging routine for 
+"""Supertagging routine
 
 Usage:
     run_tagger.py (fergusr|fergusn) (dev|test) (convolutional|token) 
