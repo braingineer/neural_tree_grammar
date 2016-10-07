@@ -1,3 +1,22 @@
+"""Supertagging routine for 
+
+Usage:
+    run_tagger.py (fergusr|fergusn) (dev|test) (convolution|token) 
+    run_tagger.py (-h | --help)
+
+Options:
+    fergusr,fergusn             choose the model, fergus recurrent or fergus neuralized
+    dev,test                    choose the dataset to run on
+    convolution,token           chosen the supertag embedding style
+    
+    
+    
+Notes: 
+McMahan and Stone
+"Syntactic realization with data-driven neural tree grammars" 
+published in COLING 2016
+"""
+
 from __future__ import print_function, division, absolute_import
 import pickle
 import sys
@@ -9,43 +28,42 @@ import fergus
 ### additional packages needed
 from tqdm import tqdm
 from sqlitedict import SqliteDict
+from docopt import docopt
 import time
 ### code in this repo
 from fergus.algorithms.tagger.utils import rollout
-from fergus.configs import global_config
+from fergus.configs import global_config, get_config
 from fergus.algorithms.tagger import Tagger
 
-def run(model, config):
-
-    print("loading data")
-    filename_key = "{}_filename".format(config['tag_mode'])
-    filepath = os.path.join(config['data_dir'], config[filename_key])
+def run(model_factory, config, db_name):
     
-    with open(filepath, 'rb') as fp:
+    db_name = os.path.join(config['data_dir'], db_name)
+    data_file = os.path.join(config['data_dir'], config['data_file'])
+
+    with open(data_file, 'rb') as fp:
         data = pickle.load(fp)
-    print("data loaded")
     
     if config['fast_mode']: 
         import numpy as np
         data = [data[i] for i in np.random.random_integers(0, len(data), config['fast_mode'])]
 
     all_stats = []
-    with SqliteDict(config['data_store_db'], tablename='indata') as datadb:
+    with SqliteDict(db_name, tablename='tagged_data') as datadb:
         capacitor = {}
         dbkeys = set(map(int,datadb.keys()))
         if len(dbkeys)>0:
-            print("{} already done; overwrite={}".format(len(dbkeys), config['overwrite_store']))
+            print("{} already done.  will be overwriting={}".format(len(dbkeys), config['overwrite_store']))
         skipped = 0
         for i, datum in tqdm(enumerate(data), total=len(data)):
             if i in dbkeys and not config['overwrite_store']: continue
-
             if len(datum) > 100: 
                 skipped += 1
                 continue
 
-            tg = model(datum)
+            tg = model_factory(datum, config)
             if len(tg.nodes) == 1:
                 print("Degenerate example (#{}). Skipping.".format(i))
+                skipped += 1
                 continue
             start = time.time()
             try:
@@ -70,17 +88,20 @@ def run(model, config):
             capacitor = {}
 
 
-    print(skipped)
+    print("{} examples were skipped because too long (>100) or too short (==1)".format(skipped))
 
 
 if __name__ == '__main__':
-    config = global_config()
-    if sys.argv[1].lower() == 'fergusn':
-        dbname = "fergus_n_{}_{}".format(config['tag_mode'], config['data_store_db'])
-        config['data_store_db'] = os.path.join(config['data_dir'], dbname)
-        run(Tagger.fergusn, config)
-
-    elif sys.argv[1].lower() == 'fergusr':
-        dbname = "fergus_r_{}_{}".format(config['tag_mode'], config['data_store_db'])
-        config['data_store_db'] = os.path.join(config['data_dir'], dbname)                                                
-        run(Tagger.fergusr, config)
+    args = docopt(__doc__, "Supertagger.  publication version. 2016")
+    ### the options in docopt doc were mutually exlusive
+    data_type = "dev" if args['dev'] else "test"
+    embed_type = "convolutional" if args['convolutional'] else "token"
+    model_type = "fergusn" if args['fergusn'] else 'fergusr'
+    base_name = "{}_{}_{}".format(model_type, embed_type, data_type)
+    db_name = base_name+".db"
+    conf_name = base_name+".conf"
+    model_factory = {'fergusn': Tagger.fergusn, 'fergusr': Tagger.fergusr}[model_type]
+    
+    config = compose_configs(data=data_type, model=model_type, embedding=embed_type)
+    
+    run(model_factory, config, db_name))

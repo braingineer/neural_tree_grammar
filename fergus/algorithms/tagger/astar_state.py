@@ -156,11 +156,11 @@ class BaseState(object):
 
 
 
-class RState(BaseState):    
+class FergusRSearchState(BaseState):    
     def update_score(self, *args):
         return -self.daughter_scores[self.n_finished]
 
-class ZeroState(BaseState):
+class FergusNSearchState(BaseState):
     def update_score(self, spine_id, node):     
         return node.parent.score_update(self.n_finished, node.spine_lookup[spine_id], self.spine_id)
 

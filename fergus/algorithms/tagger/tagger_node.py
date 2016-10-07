@@ -162,9 +162,9 @@ class Node(object):
 
 
 
-class ZeroNode(Node):
+class FergusNNode(Node):
     def __init__(self, node, ref, parent=None):
-        super(ZeroNode, self).__init__(node, ref, parent)
+        super(FergusNNode, self).__init__(node, ref, parent)
         if parent is not None:
             self.parent_spine_lookup = parent.spine_lookup
 
@@ -204,7 +204,7 @@ class ZeroNode(Node):
         new_inside = dot_dist[dot_spine_idx]
         return new_inside - old_downside - old_inside
 
-class RNode(Node):
+class FergusRNode(Node):
     def compute_best(self):
         self.best_score = self.distribution.min()
         self.best_index = self.distribution.argmin()

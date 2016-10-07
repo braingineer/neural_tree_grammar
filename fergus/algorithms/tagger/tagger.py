@@ -29,13 +29,13 @@ class Tagger(object):
         self.runtime = -1
         
     @classmethod
-    def fergusn(cls, path):
-        tg = cls(path, MNeuralized())
+    def fergusn(cls, path, init_config):
+        tg = cls(path, NeuralizedModel(init_config))
         return tg
 
     @classmethod
     def fergusr(cls, path):
-        tg = cls(path, MRecurrent())
+        tg = cls(path, RecurrentModel(init_config))
         return tg
 
     def stats(self, raw=False):
@@ -79,12 +79,12 @@ class Tagger(object):
 
 
 @singleton
-class MNeuralized(object):
-    Node = tagger_node.ZeroNode
-    State = astar_state.ZeroState
+class NeuralizedModel(object):
+    Node = tagger_node.FergusNNode
+    State = astar_state.FergusNSearchState
 
-    def __init__(self):
-        self.model = fergus_neuralized.globally_set_model()
+    def __init__(self, init_config):
+        self.model = fergus_neuralized.get_model(init_config)
         self.model.igor.compute_affordances()
         self.igor = self.model.igor
 
@@ -160,12 +160,12 @@ class MNeuralized(object):
                 leaf.distribution = -1 * np.log(prior_values[li])
 
 @singleton
-class MRecurrent(object):
-    Node = tagger_node.RNode
-    State = astar_state.RState
+class RecurrentModel(object):
+    Node = tagger_node.FergusRNode
+    State = astar_state.FergusRSearchState
 
-    def __init__(self):
-        self.model = fergus_recurrent.globally_set_model()
+    def __init__(self, init_config):
+        self.model = fergus_recurrent.get_model(init_config)
         self.model.igor.compute_affordances()
         self.igor = self.model.igor
 

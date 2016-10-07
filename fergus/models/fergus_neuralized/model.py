@@ -60,13 +60,26 @@ def traverse_nodes(layer, from_name="top", down=True):
 
 class FergusNModel(object):
     def __init__(self, igor):
-        self.logger = igor.logger = make_logger(igor, 'fergusn_dev')
+        
+        now = datetime.now()
+        self.run_name = "fergusn_{}mo_{}day_{}hr_{}min".format(now.month, now.day, 
+                                                                now.hour, now.minute)
+        log_location = os.path.join(igor.log_dir, self.run_name+".log")
+        self.logger = igor.logger = make_logger(igor, log_location)
         igor.verify_directories()
         self.igor = igor
 
     @classmethod
     def from_yaml(cls, yamlfile, kwargs=None):
         igor = Igor.from_file(yamlfile)
+        igor.prep()
+        model = cls(igor)
+        model.make(kwargs)
+        return model
+
+    @classmethod
+    def from_config(cls, config, kwargs=None):
+        igor = Igor(config)
         igor.prep()
         model = cls(igor)
         model.make(kwargs)
@@ -270,10 +283,12 @@ class FergusNModel(object):
         callbacks = [ProgbarV2(3, 10, replacers=replacers)]
         checkpoint_fp = join(self.igor.model_location,
                              self.igor.saving_prefix,
-                             "cp_weights.h5")
+                             self.igor.checkpoint_weights)
         self.logger.info("+ Model Checkpoint: {}".format(checkpoint_fp))
         callbacks += [ModelCheckpoint(filepath=checkpoint_fp, verbose=1, save_best_only=True)]
-        callbacks += [LearningRateScheduler(lambda epoch: self.igor.LR * 0.99**epoch)]
+        callbacks += [LearningRateScheduler(lambda epoch: self.igor.LR * 0.9)]
+        csv_location = os.path.join(self.igor.log_dir, self.run_name+".csv")
+        callbacks += [CSVLogger(csv_location)]
         self.model.fit_generator(generator=train_data, samples_per_epoch=N, nb_epoch=E,
                                  callbacks=callbacks, verbose=1,
                                  validation_data=dev_data,

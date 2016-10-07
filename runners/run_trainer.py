@@ -12,9 +12,6 @@ Usage:
 Notes: 
 as per Bangalore & Rambow, 2000 
 "Exploiting a Probabilistic Hierarchical Model for Generation"
-
-
-
 """
 import os
 import sys
