@@ -1,0 +1,139 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citename{Andreas \bgroup et al.\egroup
+  }2016]{Andreas2016LearningTC}
+Jacob Andreas, Marcus Rohrbach, Trevor Darrell, and Dan Klein.
+\newblock 2016.
+\newblock Learning to compose neural networks for question answering.
+\newblock {\em CoRR}, abs/1601.01705.
+
+\bibitem[\protect\citename{Bangalore and Rambow}2000]{bangalore2000exploiting}
+Srinivas Bangalore and Owen Rambow.
+\newblock 2000.
+\newblock Exploiting a probabilistic hierarchical model for generation.
+\newblock In {\em Proceedings of the 18th conference on Computational
+  linguistics-Volume 1}, pages 42--48. Association for Computational
+  Linguistics.
+
+\bibitem[\protect\citename{Bangalore \bgroup et al.\egroup
+  }2001]{bangalore2001impact}
+Srinivas Bangalore, John Chen, and Owen Rambow.
+\newblock 2001.
+\newblock Impact of quality and quantity of corpora on stochastic generation.
+\newblock In {\em Proceedings of the 2001 Conference on Empirical Methods in
+  Natural Langauge Processing, Pittsburgh, PA}.
+
+\bibitem[\protect\citename{Bowman \bgroup et al.\egroup }2016]{bowman2016fast}
+Samuel~R Bowman, Jon Gauthier, Abhinav Rastogi, Raghav Gupta, Christopher~D
+  Manning, and Christopher Potts.
+\newblock 2016.
+\newblock A fast unified model for parsing and sentence understanding.
+\newblock {\em arXiv preprint arXiv:1603.06021}.
+
+\bibitem[\protect\citename{Chiang}2000]{chiang2000statistical}
+David Chiang.
+\newblock 2000.
+\newblock Statistical parsing with an automatically-extracted tree adjoining
+  grammar.
+\newblock In {\em Proceedings of the 38th Annual Meeting on Association for
+  Computational Linguistics}, pages 456--463. Association for Computational
+  Linguistics.
+
+\bibitem[\protect\citename{Cohn \bgroup et al.\egroup }2009]{cohn2009inducing}
+Trevor Cohn, Sharon Goldwater, and Phil Blunsom.
+\newblock 2009.
+\newblock Inducing compact but accurate tree-substitution grammars.
+\newblock In {\em Proceedings of Human Language Technologies: The 2009 Annual
+  Conference of the North American Chapter of the Association for Computational
+  Linguistics}, pages 548--556. Association for Computational Linguistics.
+
+\bibitem[\protect\citename{Cohn \bgroup et al.\egroup }2010]{Cohn2010}
+Trevor Cohn, Phil Blunsom, and Sharon Goldwater.
+\newblock 2010.
+\newblock {Inducing tree-substitution grammars}.
+\newblock {\em The Journal of Machine Learning Research}, 11:3053--3096.
+
+\bibitem[\protect\citename{Collins}1997]{collins1997three}
+Michael Collins.
+\newblock 1997.
+\newblock Three generative, lexicalised models for statistical parsing.
+\newblock In {\em Proceedings of the 35th Annual Meeting of the Association for
+  Computational Linguistics and Eighth Conference of the European Chapter of
+  the Association for Computational Linguistics}, pages 16--23. Association for
+  Computational Linguistics.
+
+\bibitem[\protect\citename{Dyer \bgroup et al.\egroup
+  }2015]{dyer2015transition}
+Chris Dyer, Miguel Ballesteros, Wang Ling, Austin Matthews, and Noah~A. Smith.
+\newblock 2015.
+\newblock Transition-based dependency parsing with stack long short-term
+  memory.
+\newblock In {\em ACL}.
+
+\bibitem[\protect\citename{Jia \bgroup et al.\egroup }2014]{jia2014caffe}
+Yangqing Jia, Evan Shelhamer, Jeff Donahue, Sergey Karayev, Jonathan Long, Ross
+  Girshick, Sergio Guadarrama, and Trevor Darrell.
+\newblock 2014.
+\newblock Caffe: Convolutional architecture for fast feature embedding.
+\newblock {\em arXiv preprint arXiv:1408.5093}.
+
+\bibitem[\protect\citename{Joshi and Schabes}1991]{joshi1991tree}
+Aravind~K Joshi and Yves Schabes.
+\newblock 1991.
+\newblock Tree-adjoining grammars and lexicalized grammars.
+
+\bibitem[\protect\citename{Langkilde and Knight}1998]{langkilde1998generation}
+Irene Langkilde and Kevin Knight.
+\newblock 1998.
+\newblock Generation that exploits corpus-based statistical knowledge.
+\newblock In {\em Proceedings of the 36th Annual Meeting of the Association for
+  Computational Linguistics and 17th International Conference on Computational
+  Linguistics-Volume 1}, pages 704--710. Association for Computational
+  Linguistics.
+
+\bibitem[\protect\citename{Lewis and Steedman}2014]{lewis2014improved}
+Mike Lewis and Mark Steedman.
+\newblock 2014.
+\newblock Improved {CCG} parsing with semi-supervised supertagging.
+\newblock {\em Transactions of the Association for Computational Linguistics},
+  2:327--338.
+
+\bibitem[\protect\citename{Magerman}1995]{magerman1995statistical}
+David~M Magerman.
+\newblock 1995.
+\newblock Statistical decision-tree models for parsing.
+\newblock In {\em Proceedings of the 33rd annual meeting on Association for
+  Computational Linguistics}, pages 276--283. Association for Computational
+  Linguistics.
+
+\bibitem[\protect\citename{Schabes and Waters}1995]{Schabes1995}
+Yves Schabes and Richard~C. Waters.
+\newblock 1995.
+\newblock {Tree Insertion Grammar : A Cubic-Time , Parsable Formalism that
+  Lexicalizes Context-Free Grammar without Changing the Trees Produced}.
+\newblock {\em Computational Linguistics}, 21(4):479--513.
+
+\bibitem[\protect\citename{Socher \bgroup et al.\egroup }2010]{Socher2010}
+Richard Socher, Christopher D~Cd Manning, and Andrew Y~Ay Ng.
+\newblock 2010.
+\newblock {Learning continuous phrase representations and syntactic parsing
+  with recursive neural networks}.
+\newblock {\em Proceedings of the NIPS-2010 Deep Learning and Unsupervised
+  Feature Learning Workshop}, pages 1--9.
+
+\bibitem[\protect\citename{Tai \bgroup et al.\egroup }2015]{Tai2015}
+Kai~Sheng Tai, Richard Socher, and Christopher~D. Manning.
+\newblock 2015.
+\newblock {Improved Semantic Representations From Tree-Structured Long
+  Short-Term Memory Networks}.
+\newblock {\em Proceedings of the 53rd Annual Meeting of the Association for
+  Computational Linguistics and the 7th International Joint Conference on
+  Natural Language Processing}, pages 1556--1566.
+
+\bibitem[\protect\citename{Zhang \bgroup et al.\egroup }2016]{zhang2016top}
+Xingxing Zhang, Liang Lu, and Mirella Lapata.
+\newblock 2016.
+\newblock Top-down tree long short-term memory networks.
+\newblock {\em arXiv preprint arXiv:1511.00060}, pages 0--5.
+
+\end{thebibliography}

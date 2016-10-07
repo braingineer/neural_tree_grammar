@@ -34,7 +34,7 @@ class Tagger(object):
         return tg
 
     @classmethod
-    def fergusr(cls, path):
+    def fergusr(cls, path, init_config):
         tg = cls(path, RecurrentModel(init_config))
         return tg
 

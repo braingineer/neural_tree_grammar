@@ -54,7 +54,7 @@ def run(model_factory, config, db_name):
         if len(dbkeys)>0:
             print("{} already done.  will be overwriting={}".format(len(dbkeys), config['overwrite_store']))
         skipped = 0
-        for i, datum in tqdm(enumerate(data), total=len(data)):
+        for i, datum in tqdm(enumerate(data), total=len(data), ncols=10):
             if i in dbkeys and not config['overwrite_store']: continue
             if len(datum) > 100: 
                 skipped += 1

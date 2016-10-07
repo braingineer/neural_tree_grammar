@@ -33,6 +33,8 @@ def compose_configs(data=None, model=None, embedding=None, use_premades=True):
         config.update(get_config(format_conf(prefix, data)))
     if model:
         config.update(get_config(format_conf(prefix, model)))
+        if model+'_batch_size' in config:
+            config['batch_size'] = config[model+'_batch_size']
     if embedding:
         config['embedding_type'] = embedding
     
