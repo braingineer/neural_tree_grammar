@@ -382,7 +382,7 @@ class Igor(DataServer):
                 pickle.dump(cached_parameters, fp)
 
         self.make_spine_tensors()
-        if self.embeddings_file and not self.from_checkpoint:
+        if self.embeddings_file:
             self.saved_embeddings = np.load(self.embeddings_file)
         else:
             self.saved_embeddings = None

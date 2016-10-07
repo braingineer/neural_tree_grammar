@@ -44,7 +44,7 @@ def make_convolutional_embedding(igor):
 
     condensed_spine = Flatten()(spine_conv5)
 
-    igor.logger.info(" + Making convolutional embeddings")
+    igor.logger.info("+ Making convolutional embeddings")
     igor.F_embedspine = DynamicEmbedding(condensed_spine,
                                          W_regularizer=l2(w_decay), # Output: Spine lexicon x Feature
                                          dropout=p_emb,
@@ -86,14 +86,14 @@ def make_shallow_convolutional_embedding(igor):
 
     condensed_spine = Flatten()(spine_conv2)
 
-    igor.logger.info(" + Making version 2 of convolutional embeddings")
+    igor.logger.info("+ Making shallow convolutional embeddings")
     igor.F_embedspine = DynamicEmbedding(condensed_spine,
                                          W_regularizer=l2(w_decay), # Output: Spine lexicon x Feature
                                          dropout=p_emb,
                                          name='embed_spine') 
 
 def make_token_embedding(igor):
-        igor.logger.info(" + Making token embeddings")
+        igor.logger.info("+ Making token embeddings")
         igor.F_embedspine = Embedding(igor.spine_lexicon_size, 
                                       igor.spine_convsame_filters, 
                                       mask_zero=True, 
