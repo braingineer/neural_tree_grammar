@@ -21,7 +21,8 @@ from keras.layers import Embedding, LSTM, Input, Lambda, \
                          InputLayer, Convolution2D, MaxPooling2D
 from keras.engine import Model, merge
 from keras.optimizers import Adam
-from keras.callbacks import Callback, ProgbarLogger, ModelCheckpoint, ProgbarV2, LearningRateScheduler
+from keras.callbacks import Callback, ProgbarLogger, ModelCheckpoint, ProgbarV2, \
+                            LearningRateScheduler, CSVLogger
 from keras.regularizers import l2
 from keras.utils.visualize_util import plot as kplot
 
