@@ -1,7 +1,7 @@
 """An implemenation of FERGUS's supertagger
 
 Usage:
-    run_trainer.py fergusr 
+    run_trainer.py (fergusr|fergusn) (convolutional|token|shallowconv)
     run_trainer.py fergusn 
     run_trainer.py (-h | --help)
 
@@ -36,13 +36,18 @@ if __name__ == "__main__":
     args = docopt(__doc__, version='FERGUS trainer; October 2016')
 
     try:
-        if args['fergusr']:
-            model = fergus_recurrent.TrainingModel()
-        elif args['fergusn']:
-            model = fergus_neuralized.TrainingModel()
+        if args['convolutional']:
+            embed_type = 'convolutional'
+        elif args['token']:
+            embed_type = 'token'
         else:
-            print("No other options currently")
-            sys.exit(0)
+            embed_type = 'shallowconv'
+        model_type = "fergusn" if args['fergusn'] else 'fergusr'
+        model_factory = {'fergusn': fergus_neuralized, 
+                         'fergusr': fergus_recurrent}[model_type]
+        config = compose_configs(data='train', model=model_type, embedding=embed_type)
+    
+        model = model_factory.get_model(config)
         model.train()
 
     except KeyboardInterrupt as e:

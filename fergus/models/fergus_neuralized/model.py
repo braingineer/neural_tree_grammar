@@ -27,7 +27,8 @@ from keras.utils.visualize_util import plot as kplot
 
 ### project imports
 from .igor import Igor
-from ..common import make_convolutional_embedding, make_logger, make_token_embedding
+from ..common import make_convolutional_embedding, make_logger, make_token_embedding, \
+                     make_shallow_convolutional_embedding
 
 
 try:
@@ -117,6 +118,8 @@ class FergusNModel(object):
             make_convolutional_embedding(self.igor)
         elif self.igor.embedding_type == "token":
             make_token_embedding(self.igor)
+        elif self.igor.embedding_type == "shallowconv":
+            make_shallow_convolutional_embedding(self.igor)
         else:
             raise Exception("Incorrect embedding type")
         

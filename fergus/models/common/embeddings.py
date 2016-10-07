@@ -51,7 +51,7 @@ def make_convolutional_embedding(igor):
                                          name='embed_spine') 
 
 
-def make_convolutional_embedding_v2(igor):
+def make_shallow_convolutional_embedding(igor):
     p_emb = igor.p_emb_dropout
     p_W = igor.p_W_dropout
     p_U = igor.p_U_dropout
