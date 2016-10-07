@@ -1,7 +1,7 @@
 """Supertagging routine for 
 
 Usage:
-    run_tagger.py (fergusr|fergusn) (dev|test) (convolution|token) 
+    run_tagger.py (fergusr|fergusn) (dev|test) (convolutional|token) 
     run_tagger.py (-h | --help)
 
 Options:
@@ -32,7 +32,7 @@ from docopt import docopt
 import time
 ### code in this repo
 from fergus.algorithms.tagger.utils import rollout
-from fergus.configs import global_config, get_config
+from fergus.configs import compose_configs
 from fergus.algorithms.tagger import Tagger
 
 def run(model_factory, config, db_name):
@@ -92,7 +92,7 @@ def run(model_factory, config, db_name):
 
 
 if __name__ == '__main__':
-    args = docopt(__doc__, "Supertagger.  publication version. 2016")
+    args = docopt(__doc__, version="Supertagger.  publication version. 2016")
     ### the options in docopt doc were mutually exlusive
     data_type = "dev" if args['dev'] else "test"
     embed_type = "convolutional" if args['convolutional'] else "token"
@@ -104,4 +104,4 @@ if __name__ == '__main__':
     
     config = compose_configs(data=data_type, model=model_type, embedding=embed_type)
     
-    run(model_factory, config, db_name))
+    run(model_factory, config, db_name)

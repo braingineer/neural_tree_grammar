@@ -6,7 +6,7 @@ import time
 import json
 import numpy as np
 from os.path import join, exists
-
+from datetime import datetime
 
 #### need ikelos library; see braingineer/ikelos
 from ikelos.data import Vocabulary, VocabManager
@@ -64,7 +64,7 @@ class FergusNModel(object):
         now = datetime.now()
         self.run_name = "fergusn_{}mo_{}day_{}hr_{}min".format(now.month, now.day, 
                                                                 now.hour, now.minute)
-        log_location = os.path.join(igor.log_dir, self.run_name+".log")
+        log_location = join(igor.log_dir, self.run_name+".log")
         self.logger = igor.logger = make_logger(igor, log_location)
         igor.verify_directories()
         self.igor = igor
@@ -287,7 +287,7 @@ class FergusNModel(object):
         self.logger.info("+ Model Checkpoint: {}".format(checkpoint_fp))
         callbacks += [ModelCheckpoint(filepath=checkpoint_fp, verbose=1, save_best_only=True)]
         callbacks += [LearningRateScheduler(lambda epoch: self.igor.LR * 0.9)]
-        csv_location = os.path.join(self.igor.log_dir, self.run_name+".csv")
+        csv_location = join(self.igor.log_dir, self.run_name+".csv")
         callbacks += [CSVLogger(csv_location)]
         self.model.fit_generator(generator=train_data, samples_per_epoch=N, nb_epoch=E,
                                  callbacks=callbacks, verbose=1,

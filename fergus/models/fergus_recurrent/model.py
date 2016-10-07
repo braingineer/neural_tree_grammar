@@ -45,7 +45,7 @@ class FergusRModel(object):
         now = datetime.now()
         self.run_name = "fergusr_{}mo_{}day_{}hr_{}min".format(now.month, now.day, 
                                                                 now.hour, now.minute)
-        log_location = os.path.join(igor.log_dir, self.run_name+".log")
+        log_location = join(igor.log_dir, self.run_name+".log")
         self.logger = igor.logger = make_logger(igor, log_location)
         igor.verify_directories()
         self.igor = igor
@@ -225,7 +225,7 @@ class FergusRModel(object):
         callbacks += [ModelCheckpoint(filepath=checkpoint_fp, verbose=1, save_best_only=True)]
         callbacks += [LearningRateScheduler(lambda epoch: self.igor.LR * 0.9**(epoch))]
         
-        csv_location = os.path.join(self.igor.log_dir, self.run_name+".csv")
+        csv_location = join(self.igor.log_dir, self.run_name+".csv")
         callbacks += [CSVLogger(csv_location)]
         self.model.fit_generator(generator=train_data, samples_per_epoch=N, nb_epoch=E,
                                  callbacks=callbacks, verbose=1,

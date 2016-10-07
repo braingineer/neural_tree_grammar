@@ -18,7 +18,6 @@ except:
     import pickle
 
 from . import utils
-from ...configs import global_config
 
 class Igor(DataServer):
     """Handle the data for FERGUS 
@@ -320,18 +319,15 @@ class Igor(DataServer):
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
         
-        config = global_config()
-        self.embedding_type = config['embedding_mode']
-        data_dir = config['data_dir']
-        self.vocman_file = os.path.join(data_dir, self.vocman_file)
+        self.vocman_file = os.path.join(self.data_dir, self.vocman_file)
         self.vocabs = VocabManager.from_file(self.vocman_file)
         self.vocabs.freeze_all()
         self.total_num_type = len(self.vocabs.type)
         self.total_num_pos = len(self.vocabs.pos)
-        self.train_fp = os.path.join(data_dir, self.train_filepath)
-        self.dev_fp = os.path.join(data_dir, self.dev_filepath)
-        self.test_fp = os.path.join(data_dir, self.test_filepath)
-        head2spine_file = os.path.join(data_dir, self.head2spine_file)
+        self.train_fp = os.path.join(self.data_dir, self.train_filepath)
+        self.dev_fp = os.path.join(self.data_dir, self.dev_filepath)
+        self.test_fp = os.path.join(self.data_dir, self.test_filepath)
+        head2spine_file = os.path.join(self.data_dir, self.head2spine_file)
     
         self.debugkey = defaultdict(lambda: False)
 
@@ -353,7 +349,7 @@ class Igor(DataServer):
         utils.compute_parameters(self)
         self.make_spine_tensors()
         if self.embeddings_file and not self.from_checkpoint:
-            embeddings_file = os.path.join(data_dir, self.embeddings_file)
+            embeddings_file = os.path.join(self.data_dir, self.embeddings_file)
             self.saved_embeddings = np.load(embeddings_file)
         else:
             self.saved_embeddings = None
