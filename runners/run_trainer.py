@@ -21,7 +21,7 @@ import fergus
 
 from ikelos.data import Vocabulary
 from fergus.models import fergus_recurrent, fergus_neuralized
-from fergus.configs import global_config, get_config
+from fergus.configs import compose_configs
 from os.path import join
 from docopt import docopt
 import yaml
