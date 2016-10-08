@@ -82,8 +82,8 @@ class FergusNModel(object):
     @classmethod
     def from_config(cls, config, kwargs=None):
         igor = Igor(config)
-        igor.prep()
         model = cls(igor)
+        igor.prep()
         model.make(kwargs)
         return model
 
