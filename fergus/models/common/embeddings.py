@@ -2,7 +2,7 @@ from ikelos.layers import DynamicEmbedding, LambdaMask
 import keras.backend as K
 from keras.layers import Convolution2D, Lambda, Flatten, DataLayer, Embedding
 from keras.regularizers import l2
-from keras.engine import merge
+from keras.engine import merge, Layer
 import os
 concat = lambda layers: merge(layers, mode='concat')
 
