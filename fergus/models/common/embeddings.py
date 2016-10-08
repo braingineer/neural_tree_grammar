@@ -93,11 +93,34 @@ def make_shallow_convolutional_embedding(igor):
                                          name='embed_spine') 
 
 def make_token_embedding(igor):
-        igor.logger.info("+ Making token embeddings")
-        igor.F_embedspine = Embedding(igor.spine_lexicon_size, 
-                                      igor.spine_convsame_filters, 
-                                      mask_zero=True, 
-                                      W_regularizer=l2(igor.weight_decay), 
-                                      name='token_embedding')
-        igor.preloaded_data = []
+    igor.logger.info("+ Making token embeddings")
+    igor.F_embedspine = Embedding(igor.spine_lexicon_size, 
+                                  igor.spine_convsame_filters, 
+                                  mask_zero=True, 
+                                  W_regularizer=l2(igor.weight_decay), 
+                                  name='token_embedding')
+    igor.preloaded_data = []
+
+def make_token_onehots(igor):
+    igor.logger.info("+ Making token one-hots")
+    igor.F_embedspine = OneHOtEmbedding(igor.spine_lexicon_size, name='tokenonehot_embeddng')
+    igor.preloaded_data = []
+
+class OneHotEmbedding(Layer):
+    def __init__(self, input_dim, **kwargs):
+        self.input_dim = input_dim
+        super(OneHotEmbedding, self).__init__(**kwargs)
+        
+    def build(self, input_shape):
+        self.W = K.eye(self.input_dim)
+        
+    def compute_mask(self, x, mask=None):
+        return K.not_equal(x, 0)
     
+    def get_output_shape_for(self, input_shape):
+        return tuple(input_shape[:-1])+(self.input_dim,)
+    
+    def call(self, x, mask=None):
+        out = K.gather(self.W, x)
+        out *= K.expand_dims(K.cast(self.compute_mask(x, mask), K.floatx())) # for that numerical stability
+        return out

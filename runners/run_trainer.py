@@ -1,7 +1,7 @@
 """An implemenation of FERGUS's supertagger
 
 Usage:
-    run_trainer.py (fergusr|fergusn) (convolutional|token|shallowconv)
+    run_trainer.py (fergusr|fergusn) (convolutional|token|shallowconv|tokenonehot)
     run_trainer.py fergusn 
     run_trainer.py (-h | --help)
 
@@ -40,8 +40,12 @@ if __name__ == "__main__":
             embed_type = 'convolutional'
         elif args['token']:
             embed_type = 'token'
-        else:
+        elif args['tokenonehot']:
+            embed_type == 'tokenonehot'
+        elif args['shallowconv']:
             embed_type = 'shallowconv'
+        else:
+            raise Exception("bad embedding argument")
         model_type = "fergusn" if args['fergusn'] else 'fergusr'
         model_factory = {'fergusn': fergus_neuralized, 
                          'fergusr': fergus_recurrent}[model_type]
@@ -56,8 +60,6 @@ if __name__ == "__main__":
     except Exception as e:
         print("Unknown exception: {}".format(e))
         print("Some more info: {}".format(sys.exc_info()))
-        print("Saving model just in case")
-        model.model.save("model_extrasafetynet.h5")
           
         # elif args['debug']:
         #     kwargs = {"mode":NanGuardMode(nan_is_error=True, 

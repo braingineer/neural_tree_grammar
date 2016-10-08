@@ -29,7 +29,7 @@ from ikelos.data import Vocabulary, VocabManager
 
 from .igor import Igor
 from ..common import make_convolutional_embedding, make_logger, make_token_embedding, \
-                     make_shallow_convolutional_embedding
+                     make_shallow_convolutional_embedding, make_token_onehots
 
 try:
     import cPickle as pickle
@@ -109,6 +109,8 @@ class FergusRModel(object):
             make_token_embedding(self.igor)
         elif self.igor.embedding_type == "shallowconv":
             make_shallow_convolutional_embedding(self.igor)
+        elif self.igor.emedding_type == "tokenonehot":
+            make_token_onehots(self.igor)
         else:
             raise Exception("Incorrect embedding type")
         
