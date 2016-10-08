@@ -29,7 +29,7 @@ from ikelos.data import Vocabulary, VocabManager
 
 from .igor import Igor
 from ..common import make_convolutional_embedding, make_logger, make_token_embedding, \
-                     make_shallow_convolutional_embedding, make_token_onehots
+                     make_shallow_convolutional_embedding, make_minimal_token_embedding
 
 try:
     import cPickle as pickle
@@ -55,16 +55,18 @@ class FergusRModel(object):
     @classmethod
     def from_yaml(cls, yamlfile, kwargs=None):
         igor = Igor.from_file(yamlfile)
-        igor.prep()
         model = cls(igor)
+        
+        igor.prep()
         model.make(kwargs)
         return model
 
     @classmethod
     def from_config(cls, config, kwargs=None):
         igor = Igor(config)
-        igor.prep()
         model = cls(igor)
+        
+        igor.prep()
         model.make(kwargs)
         return model
 
@@ -109,8 +111,8 @@ class FergusRModel(object):
             make_token_embedding(self.igor)
         elif self.igor.embedding_type == "shallowconv":
             make_shallow_convolutional_embedding(self.igor)
-        elif self.igor.emedding_type == "tokenonehot":
-            make_token_onehots(self.igor)
+        elif self.igor.embedding_type == "minimaltoken":
+            make_minimal_token_embedding(self.igor)
         else:
             raise Exception("Incorrect embedding type")
         

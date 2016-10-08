@@ -1,6 +1,6 @@
-from ikelos.layers import DynamicEmbedding, LambdaMask
+from ikelos.layers import DynamicEmbedding, LambdaMask, LastDimDistribute
 import keras.backend as K
-from keras.layers import Convolution2D, Lambda, Flatten, DataLayer, Embedding
+from keras.layers import Convolution2D, Lambda, Flatten, DataLayer, Embedding, Dense
 from keras.regularizers import l2
 from keras.engine import merge, Layer
 import os
@@ -101,9 +101,16 @@ def make_token_embedding(igor):
                                   name='token_embedding')
     igor.preloaded_data = []
 
-def make_token_onehots(igor):
-    igor.logger.info("+ Making token one-hots")
-    igor.F_embedspine = OneHOtEmbedding(igor.spine_lexicon_size, name='tokenonehot_embeddng')
+def make_minimal_token_embedding(igor):
+    igor.logger.info("+ Making minimal token embeddings")
+    # onehots = OneHotEmbedding(igor.spine_lexicon_size, name='tokenonehot_embeddng')
+    # densemap = LastDimDistribute(Dense(1, name='onehot_mapper'), name='onehot_distributer')
+    # igor.F_embedspine = lambda xin: densemap(onehots(xin))
+    igor.F_embedspine = Embedding(igor.spine_lexicon_size, 
+                                  1,
+                                  mask_zero=True,
+                                  W_regularizer=l2(igor.weight_decay),
+                                  name='minimal_token_embedding')
     igor.preloaded_data = []
 
 class OneHotEmbedding(Layer):
@@ -118,7 +125,7 @@ class OneHotEmbedding(Layer):
         return K.not_equal(x, 0)
     
     def get_output_shape_for(self, input_shape):
-        return tuple(input_shape[:-1])+(self.input_dim,)
+        return tuple(input_shape)+(self.input_dim,)
     
     def call(self, x, mask=None):
         out = K.gather(self.W, x)
