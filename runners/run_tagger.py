@@ -1,7 +1,7 @@
 """Supertagging routine
 
 Usage:
-    run_tagger.py (fergusr|fergusn) (dev|test) (convolutional|token) 
+    run_tagger.py (fergusr|fergusn) (dev|test) (convolutional|token|minimaltoken) 
     run_tagger.py (-h | --help)
 
 Options:
@@ -95,11 +95,19 @@ if __name__ == '__main__':
     args = docopt(__doc__, version="Supertagger.  publication version. 2016")
     ### the options in docopt doc were mutually exlusive
     data_type = "dev" if args['dev'] else "test"
-    embed_type = "convolutional" if args['convolutional'] else "token"
+    if args['convolutional']:
+        embed_type = 'convolutional'
+    elif args['token']:
+        embed_type = 'token'
+    elif args['minimaltoken']:
+        embed_type = 'minimaltoken'
+    elif args['shallowconv']:
+        embed_type = 'shallowconv'
+    else:
+        raise Exception("bad embedding argument")
     model_type = "fergusn" if args['fergusn'] else 'fergusr'
     base_name = "{}_{}_{}".format(model_type, embed_type, data_type)
     db_name = base_name+".db"
-    conf_name = base_name+".conf"
     model_factory = {'fergusn': Tagger.fergusn, 'fergusr': Tagger.fergusr}[model_type]
     
     config = compose_configs(data=data_type, model=model_type, embedding=embed_type)
