@@ -644,9 +644,11 @@ The Fergus-N model out-performed the Fergus-R model on supertag classification w
 \textbf{Model} & \textbf{Embedding}  & \textbf{Before A*} & \textbf{After A*}  \\ \hline
 Fergus-N &  Convolution &  58.17\% & 57.40\% \\ \cline{2-4}
          &  Token       &  60.69\% & 55.56\% \\ \cline{2-4}
+         & Minimal Token & 52.09\% & 54.18\% \\ \cline{2-4}
 \hline
 Fergus-R &  Convolution &  67.62\% & 57.04\% \\ \cline{2-4}
          &  Token       &  82.65\% & 62.73\% \\ \cline{2-4}
+         &  Minimal Token & 10.13\% & 19.66\% \\ \cline{2-4}
 \hline
 \end{tabular}
 \label{table:accresults}
@@ -655,20 +657,19 @@ Fergus-R &  Convolution &  67.62\% & 57.04\% \\ \cline{2-4}
 
 \begin{figure}
 \centering
-\begin{tabular}{|l|p{2cm}|p{1.5cm}|r|}
-\hline
-Model & Embedding & Beam Type & Accuracy \\ \hline
-FERGUS & n.a. & n.a. & 74.9 \% \\
+\begin{tabular}{|l|p{3cm}|p{2.5cm}|r|}
+\cline{3-4}
+\multicolumn{2}{}{} & \multicolumn{2}{|c|}{Accuracy}   \\ \hline
+\textbf{Model} & \textbf{Embedding}  & \textbf{Top Scoring} & \textbf{Best Performance} \\ \hline
+FERGUS & n.a. & \multicolumn{2}{|c|}{74.9  \%} \\
 \hline \hline
-Fergus-N & Convolution & $Top_{all}$  & 68.9\% \\ \cline{3-4}
-         &             & $Best_{all}$ & 76.4\% \\ \cline{2-4}
-         & Token       & $Top_{all}$  & XX\% \\ \cline{3-4}
-         &             & $Best_{all}$ & XX\% \\ \cline{3-4}
+Fergus-N & Convolution & 65.80 \% & 72.58 \% \\ \cline{2-4}
+         & Token       & 65.52 \%  & 71.82 \% \\ \cline{2-4}
+         & Minimal Token & 63.79 \% & 71.09 \% \\ \cline{2-4}
 \hline
-Fergus-R & Convolution & $Top_{all}$  & 71.9\% \\ \cline{3-4}
-         &             & $Best_{all}$ & 78.9\% \\ \cline{2-4}
-         & Token       & $Top_{all}$  & XX \% \\ \cline{3-4}
-         &             & $Best_{all}$ & XX \% \\ \cline{3-4}
+Fergus-R & Convolution & 68.22\% & 74.70\% \\ \cline{2-4}
+         & Token       &  69.29 \% & 75.56\% \\ \cline{2-4}
+         & Minimal Token &  58.23 \% & 65.04\% \\ \cline{2-4}
 \hline
 \end{tabular}
 \label{table:linresults}
