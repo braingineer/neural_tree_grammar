@@ -11,8 +11,6 @@
 \renewcommand*{\p@subsection}{\S\,}
 \makeatother
 
-%\aclfinalcopy % Uncomment this line for the final submission
-%\def\aclpaperid{***} %  Enter the acl Paper ID here
 
 %\setlength\titlebox{5cm}
 % You can expand the titlebox if you need extra space
@@ -24,12 +22,9 @@
 
 \title{Syntactic realization with data-driven neural tree grammars}
 
-% \author{Brian McMahan \\
-%   Computer Science, Rutgers University \\
-%   {\tt brian.mcmahan@rutgers.edu} \\\And
-%   Matthew Stone \\
-%   Computer Science, Rutgers University \\
-%   {\tt matthew.stone@rutgers.edu} \\}
+\author{Brian McMahan \and Matthew Stone \\
+   Computer Science, Rutgers University \\
+   {\tt brian.mcmahan, matthew.stone@rutgers.edu}}
 
 \date{}
 
@@ -70,66 +65,85 @@ With traditional stochastic modeling techniques, NLG researchers have
 had to predict choices using factored models with handcrafted
 representations and strong independence assumptions, in order to avoid
 combinatorial explosions and address the sparsity of training data.
+%
 By contrast, in this paper, we leverage recent advances in deep
 learning to develop new models for syntactic choice that free
 engineers from many of these decisions, but still generalize more
-effectively and match human choices more closely than traditional
-techniques.
+effectively, match human choices more closely, and enable more
+efficient computations than traditional techniques.
 
 We adopt the characterization of syntactic choice from
-\newcite{bangalore2000exploiting} which uses a stochastic tree model and a language model to produce a linearized string from an unordered,
+\newcite{bangalore2000exploiting}, which uses a stochastic tree model
+and a language model to produce a linearized string from an unordered,
 unlabeled dependency graph.
 %
-The first step to producing a linearized string is
-to assign each node an appropriate supertag---a fragment of a parse tree with
-a leaf left open for a lexical item---using a stochastic tree model.
-%A language model is then used to select among the many possible derivation t
-The resulting assignments are consistent with many possible derivation trees
-because of adjunct ambiguitity.
+The first step to producing a linearized string is to assign each item
+an appropriate \emph{supertag}---a fragment of a parse tree with a
+leaf left open for a lexical item---using a stochastic model.
 %
-To finish the linearization, a language model is used to select among them.
+This involves applying a learned model to make predictions for the
+syntax of each item and then searching over the predictions to find a
+consistent assignment for the entire sentence.
+%
+The resulting assignments allow for many possible surface realization
+outputs because they can underdetermine the order and attachment of
+adjuncts.
+%
+To finish the linearization, a language model is used to select the
+most likely surface form from among the alternatives.
 %
 While improving the language model would improve the linearized string,
 this work focuses on more accurately predicting the correct supertags from
 unlabeled dependency trees.
 
-In this work, we make two novel contributions to improve upon the stochastic tree model:
-a supertag embedding technique which uses convolutional neural networks and
-a recurrent tree network which can model hierarchical relationships.
+Our work exploits deep learning to improve the model of supertag
+assignment in two ways.
 %
-By embedding supertags and using a recurrent tree network for the relationships between them,
-we enable more information to be used at each node.
+First, we analyze the use of embedding technques to generalize across
+supertags.  
 %
-We evaluate our contributions in two ways: first, by varying the technique used to embed
-supertags, and then by comparing a feed-forward model against our
-recurrent tree model.
-
+Neural networks offer a number of architectures that can cluster tree
+fragments during training; such models learn to treat related structures
+similarly, and we show that they improve supertag assignments.
+%
+Second, we analyze the use of tree recurrences to track hierarchical
+relationships within the generation process.
+%
+Such networks can track more of the generation context than a simple
+feed-forward model; as a side effect, they can simplify the problem of
+computing consistent supertag assignments for an entire sentence.
+%
+We evaluate our contributions in two ways: first, by varying the
+technique used to embed supertags, and then by comparing a
+feed-forward model against our recurrent tree model.
 
 Our presentation begins in \ref{sec:tree} with an introduction to tree
-grammars and a deterministic metholodogy for inducing the elementary trees of the grammar.
+grammars and a deterministic metholodogy for inducing the elementary
+trees of the grammar.
 %
-Next, \ref{sec:neural} presents the techniques we have developed to represent
-a tree grammar using a neural architecture.
+Next, \ref{sec:neural} presents the techniques we have developed to
+represent a tree grammar using a neural architecture.
 %
-Then, in \ref{sec:models}, we describe the specific model we have
-implemented, and in \ref{sec:algo}, we describe the algorithms used to describe the classification results.
+Then, in \ref{sec:models}, we describe the specific models we have
+implemented and the algorithms used to exploit the models in NLG.
 %
 The experiments in \ref{sec:expt} demonstrate the improvement of the
 model over baseline results based on previous work on stochastic
 surface realization.
 %
 We conclude with a brief discussion of the future potential for neural
-architectures to predict grammatical choices in NLG.
+architectures to predict NLG choices.
 
 \section{Tree Grammars}
 \label{sec:tree}
 
 Broadly, tree grammars are a family of tree rewriting formalisms that
-modify structure to produce strings.  The atomic syntactic units are
-called elementary trees; elementary trees combine using tree-rewrite
-rules to form derived phrase structure trees describing complex
-sentences.  Inducing a tree grammar involves fixing a formal inventory
-of structures and operations for elementary trees and then inferring
+produce strings as a side effect of composing primitive
+hierarchical structures.  The basic syntactic units are called
+elementary trees; elementary trees combine using tree-rewrite rules to
+form derived phrase structure trees describing complex sentences.
+Inducing a tree grammar involves fixing a formal inventory of
+structures and operations for elementary trees and then inferring
 instances of those structures to match corpus data.
 
 \subsection{The Grammar Formalism}
@@ -137,17 +151,15 @@ instances of those structures to match corpus data.
 The canonical tree grammar is perhaps lexicalized tree-adjoining
 grammar (LTAG) \cite{joshi1991tree}.
 %
-The elementary trees of LTAG consist of two disjoint sets with distinct operations
-%%%
-The elementary trees of LTAG are disjoint sets based on the operations
-they can perform: initial trees can perform substitution operations
+The elementary trees of LTAG consist of two disjoint sets with
+distinct operations: initial trees can perform substitution operations
 and auxiliary trees can perform adjunction operations.
 %
 The substitution operation replaces a non-terminal leaf of a target
 tree with an identically-labeled root node of an initial tree.
 %
 The adjunction operation modifies the internal structure of a target
-tree at by expanding a node identically-labeled with the root and a
+tree by expanding a node identically-labeled with the root and a
 distinguished foot note in the auxiliary tree.
 %
 The lexicalization of the the grammar requires each elementary tree to
@@ -164,7 +176,7 @@ For example, the Tree Insertion Grammar allows for adjunction as long as it is e
 Tree Substitution Grammars, meanwhile, allow for no adjunction and
 only substitutions \cite{cohn2009inducing}.
 
-We adopt one particular restricted adjunction, called
+We adopt one particular restriction on adjunction, called
 sister-adjunction or \emph{insertion}, which allows trees to attach to
 an interior node and add itself as a first or last child
 \cite{chiang2000statistical}.
@@ -185,7 +197,7 @@ This means inducing a tree grammar from a dataset is a matter of inferring the s
 
 We follow previous work in using bracketed phrase structure corpora
 and deterministic rules to induce the grammar
-\cite{chiang2000statistical,bangalore2001impact}.
+\cite{bangalore2001impact,chiang2000statistical}.
 %
 Broadly, the methodology is to split the observed trees into the
 constituents which make it up, according to the grammar formalism.
@@ -199,7 +211,7 @@ We use additional rules to classify some children as complements,
 corresponding to substitution sites and root notes of complement
 trees; and other children as adjuncts, corresponding to insertion
 trees that combine with the parent node, either to the right or to the
-left of the head; this allows us to segment the tree into units of
+left of the head.  This allows us to segment the tree into units of
 substitution and insertion.%
 \footnote{One particular downside of deterministically constructing
   the grammar this way is that it can produce an excess of superfluous
@@ -231,11 +243,12 @@ complexity by forcing it to follow Dirichlet or Pitman-Yor processes
 This work makes two contributions to improve stochastic tree modeling with neural networks.
 %This work makes two contributions to reduce that tension and progress methodologies for representing nonlinear data structures in linear spaces.
 %
-First, supertags are represented as vectors through convolutional coding,
-opening up the recent repertoire of vector space techniques.
+First, supertags are represented as vectors through embedding
+techniques that enable to model to generalize naturally over complex, but
+related structures.
 %
-Second, hierarchical dependence between nodes are modeled using a recurrent tree
-network.
+Second, hierarchical dependence between choices is modeled using a recurrent tree
+network that can capture long-distance influences as well as local ones.
 %
 %recurrent neural network variant that isn't restricted to conditioning hidden states on their temporal predecessors.
 %In brief, this technique is made possible through recent advanced in StackLSTMs \cite{dyer2015transition} and the use of topological indexing of recurrent states.% hidden states of
@@ -251,9 +264,13 @@ network.
 %To embed a supertag and summarize it into a vector, each of its nodes are
 %first embedded, combined to form a tensor, and then
 %We embed supertags by embed each of its nodes, combine
-To embed a supertag, each of its nodes are embedded, grouped to form a tensor, and then summarized into a single vector using a series of convolutional neural networks.
+To embed a supertag, we embed each node, group the resulting vectors
+to form a tensor, and then summarize the tensor into a single vector
+using a series of convolutional neural networks.
 %
-Since the weights of a convolutional neural network are optimized during training, the data should determine which parts of the supertag are important.
+Since the weights of a convolutional neural network are optimized
+during training, the data should determine which parts of the supertag
+are important.
 %
 %The purpose of convolutional coding is to allow the data to determine which facets of a supertag are relevant and useful.
 %
@@ -264,16 +281,16 @@ an embedding vector.
 We evaluate our contribution and compare these two approaches to get a sense for whether convolutional coding robustly generalizes across supertags.
 
 
-The goal of embedding supertags is to summarize the tree structure into a single vector.
+To explain our technique, we begin by observing that each elementary
+tree is a complex structure with nodes labeled by category and
+assigned a role that enables further tree operations.
 %
-Inside the tree structure, there are two separate pieces of information which need to be summarized:
-the syntactic category of each node and the role each node plays in the tree grammar.
+The root node's role represents the overall action associated with
+that elementary tree---either substitution or insertion.
 %
-The root receives a special role---either substitution or insertion to represent
-the supertag's tree operation.
-%g
-The remaining nodes either have the substitution point role or the spine role---they are along the spine from root to the lexical attachment point.
-
+The remaining nodes either have the substitution point role or the
+spine role---they are along the spine from root to the lexical
+attachment point, and thus provide targets for further insertion.
 
 The nodes of a supertag can be independently embedded and combined to form a
 tensor of embeddings.
@@ -425,7 +442,7 @@ stochastic tree modeling.
 
 Fergus-N is a stochastic tree model which uses local parent-child information as inputs to a feed-forward network.
 %
-Each parent-child pair are treated as independent of all other pairs.
+Each parent-child pair is treated as independent of all others.
 %
 The probability of the parent's supertag is computed using an embedding of the pair's lexical material and an embedding of the child's supertag.
 %
@@ -490,8 +507,7 @@ Once selected, the subtree is attached to the possible supertags of its parent t
 %
 These resulting subtrees are placed into the priority queue and the algorithm iterates to progress the search.
 %
-The search concludes either when a single complete tree has been found\footnote{Although, the data has some noise so that sometimes there is no complete tree that can possibly be formed}.
-
+The search concludes either when a single complete tree has been found.\footnote{Although, the data has some noise so that sometimes there is no complete tree that can possibly be formed}
 
 \subsection{Model 2: Fergus-R}
 
@@ -707,12 +723,14 @@ This is in large part due to the different kinds of decisions that have to be ma
 
 The models outlined in this paper push forward methodologies for modeling tree grammars in neural networks. 
 
-
 A lot of work has to be done to take advantage of deep learning and translate that to tasks beyond parsing, especially language production tasks.
 
 This is a first step in a larger research program of stochastic generation models with the kind of generalization that deep learning techniques like word embeddings and recurrent neural networks give you. 
 
+\section*{Acknowledgments}
 
+This research was supported in part by NSF IIS-1526723 and by a
+sabbatical leave from Rutgers to Stone.
 
 \bibliography{coling2016}
 \bibliographystyle{acl}
