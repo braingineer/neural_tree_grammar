@@ -379,7 +379,7 @@ recurrent tree networks use the hidden state from the parent.
 Utilizing the parent's hidden state rather than the sequentially previous hidden
 state, the recurrent connection can travel down the branches of a tree.
 %
-An example of a recurrent tree network is shown in Figure \ref{fig:rtn}.
+An example of a recurrent tree network is shown in eFigure \ref{fig:rtn}.
 
 
 
@@ -625,40 +625,79 @@ The prefix tree is greedily searched with 32 beams.
 \section{Experiments}
 \label{sec:expt}
 
-In this work, we make two contributions to stochastic tree modeling and evaluate them on a supertag prediction and linearization task. 
-%
-The evaluation uses the Wall Street Journal sections of the Penn Treebank which have been previously used for evaluating statistical tree grammars \cite{chiang2000statistical}\footnote{A possible additional data source, the data from the 2011 Shared Task on Surface Realization, was not available}.
-%
-Our data pipeline transforms the treebank into a collection of elementary trees and derivation tree---the structured relationships required to compose them into the observed data (see \ref{}).
-%
-Abstracting syntactic information from the derivation tree structure leads to the unlabeled dependency trees our models assume as input. 
+Using the representations of \ref{sec:neural}, the models of
+\ref{sec:models} can be instantiated in six different ways.  We can
+use a feed-forward Fergus-N architecture or a recurrent Fergus-R
+architecture.  Each architecture can embed supertags \emph{minimally},
+by a simple one-hot vector; \emph{atomically}, by learning an
+embedding vector corresponding to each supertag; or
+\emph{structureally}, by using a convolutional coding over the
+supertag tree structure.
 
-We evaluate the convolutional coding of the supertags by comparing it against standard embedding techniques.
-%
-Specifically, we construct a matrix that has as many rows as supertags and is initialized with a Glorot uniform distribution.
-%
-Fergus-N and Fergus-R are retrained with the exact same parameters, except that instead of the supertag indices referencing a matrix constructed by a series of convolutions, it references our constructed embedding matrix (which gets optimized during learning). 
-%
-The impact of the embedding will be different for each model---Fergus-N uses embedded supertags in constructing the node state and Fergus-R does not---but any differences between the models and their alternate embedding counterparts can be perceived as evidence for either embedding technique.  
+\subsection{Training}
 
-
-To evaluate whether a recurrent tree network can capture hierarchical and long-distance relationships, we compare it against a feed-forward model. 
+We trained six such models using a common experimental plantform.  We
+started from the Wall Street Journal sections of the Penn Treebank,
+which have been previously used for evaluating statistical tree
+grammars \cite{chiang2000statistical}\footnote{A possible additional
+  data source, the data from the 2011 Shared Task on Surface
+  Realization, was not available}.
 %
-Specifically, for each model, we measure how often it predicts the correct supertag or if it predicts a different supertag but with the correct root syntactic category, root node role, or lexical leaf node\footnote{The leaf to which a lexical item would attach} syntactic category.
+Our data pipeline breaks each sentence in the treebank into component
+elementary trees and then represents the sentence in terms of a
+derivation tree, specifying the tree-rewriting operations required to
+construct the actual treebank surface tree from the basic supertags.
 %
-These four quantities represent different aspects that are important to get right in a stochastic tree model.
+Abstracting syntactic information from the derivation tree leads to
+the unlabeled dependency trees our models assume as input.
 
+From this input, we extracted the atomic supertag prediction instances
+and trained a network defined by each of the architectures of
+\ref{sec:models} and each of the supertag representations of
+\ref{sec:neural}.  As always, we used Section XXX for development,
+Sections XXX for training, and Section XXX for testing.  A complete
+description of network organization and training parameters is given
+in the appendix.  Our code is available XXX.
 
-%Fergus-R's predictions never observe its neighboring nodes' supertags, so any predictive improvements are based solely on lexical and ancestral context.
+\subsection{Performance Metrics}
 
-We also compare the differences in supertag embeddings and stochastic tree models on the linearization task itself.
+We evaluate the performance of the models in several ways.  First, we
+look at the accuracy of the supertag predictions directly output by
+each model.  Second, we look at the accurace of the final supertags
+obtained by decoding the model predictions to the best-ranked
+consistent global assignment.  These metrics directly assess the
+ability of the models to successfully learn the target distributions.
+
+Next, we evaluate the models on the full NLG task, including
+linearization.  
 %
-The linearization tasks licenses more freedom in supertag classifications because it may have the same root and leaf syntactic categories but differ in minor constructions, such as number of arguments. 
+The linearization tasks licenses more freedom in supertag
+classifications because it may have the same root and leaf syntactic
+categories but differ in minor constructions, such as number of
+arguments.
 %
-The freedom allows for models to be more generalized and less fit to the specific supertags, but at the same time, it also mutes the distinctions between classification decisions.
+The freedom allows for models to be more generalized and less fit to
+the specific supertags, but at the same time, it also mutes the
+distinctions between classification decisions.
 %
-The metrics used in the linearization task were taken from previous work, who argue that it correlates with generation performance better than n-gram counting methods. 
+We report XXXMEASURE, following \cite{}.
+%
+They argue that their measure correlates with NLG performance better
+than n-gram counting methods.
+%
+Since linearization uses a beam search, we report statistics both for
+the top-ranked beam and for the empirically based beam among the
+candidates computed during search.
+%
+The difference gives an indication of the effect of the language model
+in guiding the decisions that remain after supertagging.
 
+Finally, we report statistics about the run time of different
+generation steps.
+%
+This allows us to assess the complexity of the different decoding
+steps involved in generation, to reveal any tradeoffs among the models
+between speed and accuracy.
 
 \subsection{Results}
 \label{sec:results}
@@ -668,36 +707,64 @@ The metrics used in the linearization task were taken from previous work, who ar
 \begin{tabular}{|l|p{3cm}|c|c|c|}
 \cline{3-4}
 \multicolumn{2}{}{}& \multicolumn{2}{ |c| }{ \textbf{Accuracy}}&\multicolumn{1}{}{} \\ \hline
-\textbf{Model} & \textbf{Embedding}  & \textbf{Before A*} 
-& \textbf{After A*} & Running Time \\ \hline
-Fergus-N &  Convolution &  58.17\% & 57.40\%  & 1.97s \\ \cline{2-5}
-         &  Token       &  60.69\% & 55.56\% & 1.81s \\ \cline{2-5}
-         & Minimal Token & 52.09\% & 54.18\% & 2.02s \\ \cline{2-5}
+\textbf{Model} & \textbf{Embedding}  & \textbf{Raw Model} 
+& \textbf{After Decoding} & \textbf{Running Time} \\ \hline
+Fergus-N &  Structural  &  58.17\% & 57.40\%  & 1.97s \\ \cline{2-5}
+         &  Atomic      &  60.69\% & 55.56\% & 1.81s \\ \cline{2-5}
+         &  Minimal     &  52.09\% & 54.18\% & 2.02s \\ \cline{2-5}
 \hline
-Fergus-R &  Convolution &  67.62\% & 57.04\% & 0.30s \\ \cline{2-5}
-         &  Token       &  82.65\% & 62.73\% & 0.36s\\ \cline{2-5}
-         &  Minimal Token & 10.13\% & 19.66\% & 0.54s \\ \cline{2-5}
+Fergus-R &  Structural &  67.62\% & 57.04\% & 0.30s \\ \cline{2-5}
+         &  Atomic     &  82.65\% & 62.73\% & 0.36s\\ \cline{2-5}
+         &  Minimal    & 10.13\% & 19.66\% & 0.54s \\ \cline{2-5}
 \hline
 \end{tabular}
-\caption{For each supertag and embedding pair, the mean accuracy of supertag classification before and after the A* algorithm is shown. Also shown is the median running time---which includes model computation and A* search.}
+\caption{For each supertag and embedding pair, the mean accuracy of
+  supertag classification directly output by the model and in the
+  consistent global assignment output by A* decoding. Also shown is
+  the median running time---which includes model computation and A*
+  search.}
 \label{table:accresults}
 \end{table}
 
-Table \ref{table:accresults} shows the results of supertag classification using the stochastic tree models is shown. 
+Table \ref{table:accresults} shows the results of supertag
+prediction.
 %
-The scores are grouped in first by the model and then by the embedding method. 
+All differences between model are significant using a Paired-Sample t-test ($p<10^{-5}$)
 %
-The accuracy of each model is additionally broken down by how often it got the various components correct. 
+The flexible embedding methods perform consistently better,
+suggesting that the clustering capabilities of neural methods is a
+crucial part of their effectiveness.
 %
-The root category and role refer to the syntactic label and grammatical role of a supertag. 
+The convolution encoding seems to work better with Fergus-N.  
 %
-The leaf category refers to the syntactic label of the leaf to which a lexical item would attach---essentially, this is the part of speech of the lexical item.
-%
-All differences between model are significant using a Paired-Sample t-test ($p<10^{5}$)
+This merits further investigation: it might be because Fergus-N
+predicts one supertag as a function of another, and so the
+compositional relationships among the two trees matters more---or
+because Fergus-R's contextualized decisions depend on similarities
+among supertags (involving argument structure or information
+structure) that are difficult for the convolutional coding to
+represent or learn.
 
-The Fergus-N model out-performed the Fergus-R model on supertag classification with convolutional supertag embeddings, but the Fergus-R model performed much closer to that of Fergus-N on the individual components. 
+The overall best results come from Fergus-R, suggesting that it is
+worthwhile to take additional context into account in this task.
+%
+At the same time, the median time taken to classify and decode a
+sentence with Fergus-R is just one sixth that of Fergus-N.
+%
+We suspect that there is a general lesson in this speedup: because
+neural models can be more flexible about the information they take
+into account in decisions, it's especially important in designing
+neural architectures to break a problem down into decisions that can
+be combined easily.
 
-
+Finally, decoding the network generally leads to lower accuracy.
+%
+It seems that our models are not doing a good job of using the
+predictions it makes to triangulate to accurate and consistent
+supertags. 
+%
+This suggests that the models could be improved by taking more or
+better information into account in decoding.
 
 \begin{table}
 \centering
@@ -705,20 +772,32 @@ The Fergus-N model out-performed the Fergus-R model on supertag classification w
 \cline{3-4}
 \multicolumn{2}{}{} & \multicolumn{2}{|c|}{Accuracy}   \\ \hline
 \textbf{Model} & \textbf{Embedding}  & \textbf{Top Scoring} & \textbf{Best Performance} \\ \hline
-FERGUS & n.a. & \multicolumn{2}{|c|}{74.9  \%} \\
-\hline \hline
-Fergus-N & Convolution & 65.80 \% & 72.58 \% \\ \cline{2-4}
-         & Token       & 65.52 \%  & 71.82 \% \\ \cline{2-4}
-         & Minimal Token & 63.79 \% & 71.09 \% \\ \cline{2-4}
+Fergus-N & Convolution & 65.80\% & 72.58\% \\ \cline{2-4}
+         & Token       & 65.52\%  & 71.82\% \\ \cline{2-4}
+         & Minimal Token & 63.79\% & 71.09\% \\ \cline{2-4}
 \hline
 Fergus-R & Convolution & 68.22\% & 74.70\% \\ \cline{2-4}
-         & Token       &  69.29 \% & 75.56\% \\ \cline{2-4}
-         & Minimal Token &  58.23 \% & 65.04\% \\ \cline{2-4}
+         & Token       &  69.29\% & 75.56\% \\ \cline{2-4}
+         & Minimal Token &  58.23\% & 65.04\% \\ \cline{2-4}
 \hline
 \end{tabular}
-\caption{Shown above as accuraccy is the percentage of tokens in the linearized strings that are in correct positions according to an edit distance measure.}
+\caption{Shown above as accuracy is the percentage of tokens in the linearized strings that are in correct positions according to an edit distance measure.}
 \label{table:linresults}
 \end{table}
+
+Figure~\ref{table:linresults} shows the NLG evaluation results for the
+different models.
+%
+The performance confirms our expectation that differences in supertag
+accuracy after decoding correlate with NLG accuracy overall, but that
+differences in NLG performance are attenuated.
+%
+We note by comparison that Bangalore and Rambow report an accuracy of
+74.9\% in their best evaluation of FERGUS---on a data set of just 100
+sentences with an average lenth of XXX.
+%
+Our evaluation, on XXX sentences with an average length of XXX, is much
+more strenuous.
 
 \section{Related Work}
 \label{sec:relatedwork}
