@@ -1,5 +1,5 @@
 # Syntactic realization with data-driven neural tree grammars
-> Brian McMahan and Matthew Stone, 2016
+> Brian McMahan and Matthew Stone, 2016 \n
 > Presented at COLING, 2016
 
 
