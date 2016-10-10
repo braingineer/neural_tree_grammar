@@ -1,6 +1,6 @@
 import subprocess
 
-command = "~/research/code/stanford-parser/bcm_transformer.sh merged/{0} > sfprocced/{0}"
+command = "~/research/code/stanford-parser/bcm_transformer.sh merged/{0} > preprocessed/{0}"
 
 import glob
 

@@ -621,6 +621,27 @@ The metrics used in the linearization task were taken from previous work, who ar
 
 \subsection{Results}
 
+
+\begin{figure}
+\centering
+\begin{tabular}{|l|p{2cm}|c|c|c|}
+\cline{3-4}
+\multicolumn{2}{}{}& \multicolumn{2}{ |c| }{ \textbf{Accuracy}}&\multicolumn{1}{}{} \\ \hline
+\textbf{Model} & \textbf{Embedding}  & \textbf{Before A*} 
+& \textbf{After A*} & Running Time \\ \hline
+Fergus-N &  Convolution &  58.17\% & 57.40\%  & 1.97s \\ \cline{2-5}
+         &  Token       &  60.69\% & 55.56\% & 1.81s \\ \cline{2-5}
+         & Minimal Token & 52.09\% & 54.18\% & 2.02s \\ \cline{2-5}
+\hline
+Fergus-R &  Convolution &  67.62\% & 57.04\% & 0.30s \\ \cline{2-5}
+         &  Token       &  82.65\% & 62.73\% & 0.36s\\ \cline{2-5}
+         &  Minimal Token & 10.13\% & 19.66\% & 0.54 \\ \cline{2-5}
+\hline
+\end{tabular}
+\label{table:accresults}
+\caption{For each supertag and embedding pair, the mean accuracy of supertag classification before and after the A* algorithm is shown. Also shown is the median running time---which includes model computation and A* search.}
+\end{figure}
+
 Table \ref{table:accresults} shows the results of supertag classification using the stochastic tree models is shown. 
 %
 The scores are grouped in first by the model and then by the embedding method. 
@@ -636,24 +657,6 @@ All differences between model are significant using a Paired-Sample t-test ($p<1
 The Fergus-N model out-performed the Fergus-R model on supertag classification with convolutional supertag embeddings, but the Fergus-R model performed much closer to that of Fergus-N on the individual components. 
 
 
-\begin{figure}
-\centering
-\begin{tabular}{|l|p{2cm}|c|c|}
-\cline{3-4}
-\multicolumn{2}{}{}& \multicolumn{2}{ |c| }{ \textbf{Accuracy}} \\ \hline
-\textbf{Model} & \textbf{Embedding}  & \textbf{Before A*} & \textbf{After A*}  \\ \hline
-Fergus-N &  Convolution &  58.17\% & 57.40\% \\ \cline{2-4}
-         &  Token       &  60.69\% & 55.56\% \\ \cline{2-4}
-         & Minimal Token & 52.09\% & 54.18\% \\ \cline{2-4}
-\hline
-Fergus-R &  Convolution &  67.62\% & 57.04\% \\ \cline{2-4}
-         &  Token       &  82.65\% & 62.73\% \\ \cline{2-4}
-         &  Minimal Token & 10.13\% & 19.66\% \\ \cline{2-4}
-\hline
-\end{tabular}
-\label{table:accresults}
-\caption{Classification accuracy by supertag and its individual properties}
-\end{figure}
 
 \begin{figure}
 \centering
@@ -717,7 +720,39 @@ This is a first step in a larger research program of stochastic generation model
 \bibliography{coling2016}
 \bibliographystyle{acl}
 
+
+\newpage
 \appendix
+
+\section{Appendix}
+
+
+\begin{figure}
+\centering
+\begin{tabular}{|p{6cm}|r|}
+\hline
+Model Parameter & Value \\ \hline
+Convolution filter size & 48 \\ \hline
+Optimization Algorithm & ADAM \\ \hline
+Learning Rate & 0.0001 \\ \hline
+Dense-Layer Dropout Rates & 0.5 \\ \hline
+\end{tabular}
+\label{table:params}
+\caption{.}
+\end{figure}
+
+\subsection{Data}
+
+This work used data processed from the Wall Street Journal portion of the Treebank corpus. Specifically, section 02-21 were used for training, section 22 for development, and section 23 for testing.  The corpus was preprocessed using the Stanford Parser to fix some common issues as well as remove information extra to syntactic category.  The resulting parse trees were processed.  They were annotated with head rules that marked the head at each node in the parse tree and which nodes were dependents or adjuncts.  These annotated trees were split at adjunction and substitution positions to form the grammar.  For the dependency structures used in the models, we use the derivation tree formed by the grammar for each parse tree.  The derivation structures were further processed to parent-child pairs and top-down traversals for each of the models.  The preprocessing and processing code are distributed with this paper. 
+
+\subsection{Model parameters}
+
+
+
+\end{document}
+
+
+For the convolutional embeddings, we used 
 
 Model specifications
 - layers, learning, etc
@@ -749,6 +784,3 @@ in conv coding maybe:
 
 in experiments
     - where the data comes from
-
-
-\end{document}
