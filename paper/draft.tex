@@ -629,10 +629,10 @@ Using the representations of \ref{sec:neural}, the models of
 \ref{sec:models} can be instantiated in six different ways.  We can
 use a feed-forward Fergus-N architecture or a recurrent Fergus-R
 architecture.  Each architecture can embed supertags \emph{minimally},
-by a simple one-hot vector; \emph{atomically}, by learning an
+by learning a scalar corresponding to each supertag; \emph{atomically}, by learning an
 embedding vector corresponding to each supertag; or
-\emph{structureally}, by using a convolutional coding over the
-supertag tree structure.
+\emph{structureally}, by using convolutional coding over each
+supertag's tree structure.
 
 \subsection{Training}
 
@@ -654,10 +654,10 @@ the unlabeled dependency trees our models assume as input.
 From this input, we extracted the atomic supertag prediction instances
 and trained a network defined by each of the architectures of
 \ref{sec:models} and each of the supertag representations of
-\ref{sec:neural}.  As always, we used Section XXX for development,
-Sections XXX for training, and Section XXX for testing.  A complete
+\ref{sec:neural}.  As always, we used Section 02-21 for development,
+Sections 22 for training, and Section 23 for testing.  A complete
 description of network organization and training parameters is given
-in the appendix.  Our code is available XXX.
+in the appendix.  The code and complete experimental setup are publically available\footnote{https://github.com/braingineer/neural\_tree\_grammar}.
 
 \subsection{Performance Metrics}
 
@@ -680,7 +680,7 @@ The freedom allows for models to be more generalized and less fit to
 the specific supertags, but at the same time, it also mutes the
 distinctions between classification decisions.
 %
-We report XXXMEASURE, following \cite{}.
+We report a modified edit distance measure, Generation String Accuracy, following \cite{bangalore2000evaluation}.
 %
 They argue that their measure correlates with NLG performance better
 than n-gram counting methods.
