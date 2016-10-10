@@ -244,7 +244,7 @@ predict how likely a supertag is to fit a specific lexical item in the
 context of a generation task.  We approach this problem using neural
 networks. 
 %
-In particuaar, this work makes two contributions to improve stochastic
+In particular, this work makes two contributions to improve stochastic
 tree modeling with neural networks.
 %
 First, we represent supertags as vectors through embedding techniques
@@ -265,7 +265,7 @@ differences in word order.  Accordingly, words have many related
 supertags, with substantial overlaps in structure, and, presumably,
 corresponding similarities in their patterns of occurrence.  A
 traditional machine learning approach to supertag prediction would
-treat individual supertags as atoms for classification; geenralizing
+treat individual supertags as atoms for classification; generalizing
 across supertags would require linking model parameters to handcrafted
 features or backoff categories.
 
@@ -506,11 +506,11 @@ The final operation induces a probability distribution over the treelet and leaf
 &\Omega_{treelet} = concat([repeat(\omega_{node}),~G_\Lambda(tagset_p)]) \nonumber \\
 &\Omega_{leaf} = concat([repeat(\omega_{lex}),~G_\Lambda(tagset_c)]) \nonumber \\
 &P_\theta(tag_{p,i} | lex_{p}, lex_{c}, tag_{c})=
-\frac{exp(\Psi(\omega_{treelet_i})))}
-{\sum_{j \in |tagset_p|} exp(\Psi(\omega_{treelet_j})))} \nonumber \\
+\frac{exp(\Psi_{predict}(\omega_{treelet_i})))}
+{\sum_{j \in |tagset_p|} exp(\Psi_{predict}(\omega_{treelet_j})))} \nonumber \\
 &P_\theta(tag_{c,i} |lex_{p}, lex_{c}) = 
-\frac{exp(\Psi(\omega_{leaf_i})))}
-{\sum_{j \in |tagset_c|} exp(\Psi(\omega_{leaf_j})))} \nonumber 
+\frac{exp(\Psi_{predict}(\omega_{leaf_i})))}
+{\sum_{j \in |tagset_c|} exp(\Psi_{predict}(\omega_{leaf_j})))} \nonumber 
 \end{align}
 
 
@@ -665,7 +665,7 @@ The metrics used in the linearization task were taken from previous work, who ar
 
 \begin{table}
 \centering
-\begin{tabular}{|l|p{2cm}|c|c|c|}
+\begin{tabular}{|l|p{3cm}|c|c|c|}
 \cline{3-4}
 \multicolumn{2}{}{}& \multicolumn{2}{ |c| }{ \textbf{Accuracy}}&\multicolumn{1}{}{} \\ \hline
 \textbf{Model} & \textbf{Embedding}  & \textbf{Before A*} 
@@ -814,6 +814,8 @@ exact specifications in configuration files can be found in the code repository 
 \label{tab:params}
 \end{table}
 
+In this appendix, we describe some design decisions that took place which did not have a place in the paper but should still be reported.  In particular, this section covers the data processing, parameters used in the final model, and design decisions for the restricting the supertag distributions. 
+
 \subsection{Data}
 
 This work used data processed from the Wall Street Journal portion of the Treebank corpus. Specifically, section 02-21 were used for training, section 22 for development, and section 23 for testing.  The corpus was preprocessed using the Stanford Parser to fix some common issues as well as remove information extra to syntactic category.  The resulting parse trees were processed.  They were annotated with head rules that marked the head at each node in the parse tree and which nodes were dependents or adjuncts.  These annotated trees were split at adjunction and substitution positions to form the grammar.  For the dependency structures used in the models, we use the derivation tree formed by the grammar for each parse tree.  The derivation structures were further processed to parent-child pairs and top-down traversals for each of the models.  The preprocessing and processing code are distributed with this paper. 
@@ -821,6 +823,22 @@ This work used data processed from the Wall Street Journal portion of the Treeba
 \subsection{Model parameters}
 
 All of the models were implemented in the Keras \cite{chollet2015keras} and Theano \cite{theano} libraries.  The specific parameters that were used are shown in Table \ref{tab:params}.  The parameters were selected by measured performance on the development portion of the dataset.  In the accompanying code repository, the full experiment parameters---including progammatic parameters controlling the experimental design---are specified in configuration files. 
+
+\subsection{Model design}
+
+To facilitate efficient model computation, we restricted the computation for supertag distributions and used vectorized functions.
+%
+The set of supertags that are retrieved for probability distribution computation are set of supertags that are seen paired with the lexical item, reducing the output distribution from over 5000 to under 500.  
+%
+This was implemented as a set of indices to the embedding matrix passed into the computation with the rest of the data. 
+%
+Future implementations will explore having the supertag subset lookup table be part of the computation.
+%
+While there are several ways the affinity between supertag and lexical state vector could have been computed, we chose to concatenate the vectors, map them to a new space using a fully connected layer, and compute a score with a vectorized function.
+%
+The vectorized function operation is the same mechanism which calculates the probability distribution used in soft attention. 
+
+
 
 \end{document}
 
