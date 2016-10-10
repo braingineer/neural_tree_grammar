@@ -248,7 +248,7 @@ In particular, this work makes two contributions to improve stochastic
 tree modeling with neural networks.
 %
 First, we represent supertags as vectors through embedding techniques
-that enable to model to generalize naturally over complex, but related
+that enable to model to generalize over complex, but related
 structures.
 %
 Second, we address the hierarchical dependence between choices using a
@@ -452,7 +452,7 @@ For both stochastic tree models, a recurrent neural network language model is us
 %It is important to note that it is the same language model
 %By using the same language model to finishing linearizing the output of both models, any observed differences in performance can be localized to the performance of the stochastic tree models.
 %
-The same language model is to eliminate the confound of
+The same language model is used to eliminate the confound of
 language model performance and measure performance differences in the
 stochastic tree modeling.
 %
@@ -632,7 +632,9 @@ architecture.  Each architecture can embed supertags \emph{minimally},
 by learning a scalar corresponding to each supertag; \emph{atomically}, by learning an
 embedding vector corresponding to each supertag; or
 \emph{structurally}, by using convolutional coding over each
-supertag's tree structure.
+supertag's tree structure to form a vector.
+%
+In each case, the vector (a size-one vector in the \emph{mimimal} condition) is concatenated as described in \ref{sec:models}.
 
 \subsection{Training}
 
@@ -794,49 +796,47 @@ differences in NLG performance are attenuated.
 %
 We note by comparison that Bangalore and Rambow report an accuracy of
 74.9\% in their best evaluation of FERGUS---on a data set of just 100
-sentences with an average length of XXX.
+sentences with an average length of 16.7.
 %
-Our evaluation, on XXX sentences with an average length of XXX, is much
+Our evaluation, on 2400 sentences with an average length of 22, is much
 more strenuous.
 
 \section{Related Work}
 \label{sec:relatedwork}
 
+
+
+
 There are several lines of related work which explore stochastic tree
-models from the standpoint of parsing and understanding, including
-networks that maintain state using recurrences and networks that
-agglomerate information using tree traversals.
+models from the standpoint of parsing and understanding.
+%, including 
+%networks that maintain state using recurrences and networks that
+%agglomerate information using tree traversals.
 %
 We think the perspective given by NLG is instructive.
+%
+Where parsing infers most probable underlying structure, generation infers the most likely way of expressing a semantic structure---with which unlabeled dependency trees have served as our proxy in this work. 
 
-Most similar to ours, is the top down tree structure of \newcite{zhang2016top}.
-%
-In this model, first, two long short-term memory (LSTM) networks are
-used to make branch exploration decisions, and then an additional two
-LSTM networks are used to continue along these branches.
-%
-The work of \newcite{Tai2015} similarly use an LSTM, but instead work
-from the leaves upward to merge the hidden states of children inside
-the recurrent step.
-%
-The upward merging of children to form representations for parents has
-also been studied as pairwise agglomerations using recursive neural
-networks \cite{Socher2010}.
 
-A growing body of work investigates modeling long distance
-relationships using efficient stacks in modern neural architecture.
+The works most similar to ours explicitly model tree structures, but focus on resolving the uncertainty invovled with the latent structure of an observed sentence. 
 %
-\newcite{dyer2015transition} utilize an indexable LSTM as a neural
-stack for transition-based parsing.
+For example, the top down tree structure of \newcite{zhang2016top} expresses generation of a dependency structure as the decisions of a set of long short-term memory networks.  
 %
-Similarly, \newcite{bowman2016fast} utilize both a stack and buffer
-for sentence comprehension by utilizing an indexable structure and
-performing computations with indices to these structures.
+The competing solutions are different tree structures which generate a single linear form.
 %
-Finally, recent work models long distance relationships using the
-dynamic composability in ApolloCaffe, a fork of the Caffe library
-\cite{jia2014caffe}, to build different network structures based on
-parse trees \cite{Andreas2016LearningTC}.
+In contrast, the generation problem is concerned with different linear forms that can result from the same tree structure. 
+
+Although the methodology presented in this work is closely related to several recent neural networks models for long-distance relationships, it differs distinctly in its treatment of state and search.
+%
+Specifically, forward-planning in a generation task produces a growing horizon of syntactic choices while shrinking the horizon of semantic goals.
+%
+At each step, a generator will choose amongst more possible syntactic operations with a limited number of goals in mind. 
+%
+In contrast, parsing and understanding begins with the surface form and constructs the organized semantic content, either for a downstream decision or for its own sake. 
+%
+The most notable works in this line of research are the recurrent neural network grammars \cite{dyer2016recurrent}, a shift-reduce parser and interpreter \cite{bowman2016fast}, and a dynamic network for composing other neural network modules \cite{Andreas2016LearningTC}. 
+%
+Interestingly, there is a common theme of using indexable data structures in neural architecture to make long-distance decisions. 
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -1006,3 +1006,43 @@ in conv coding maybe:
 
 in experiments
     - where the data comes from
+
+
+
+
+
+In generating the tree structure, it is optimized 
+While this generates a tree structure, it is optimized to discover the most likely dependency structure that matches an input linear form.  
+%
+In this model, first, two long short-term memory (LSTM) networks are
+used to make branch exploration decisions, and then an additional two
+LSTM networks are used to continue along these branches.
+%
+The work of \newcite{Tai2015} similarly use an LSTM, but instead work
+from the leaves upward to merge the hidden states of children inside
+the recurrent step.
+%
+The upward merging of children to form representations for parents has
+also been studied as pairwise agglomerations using recursive neural
+networks \cite{Socher2010}.
+
+
+
+
+differs in its emphasis on 
+
+
+A growing body of work investigates modeling long distance
+relationships using efficient stacks in modern neural architecture.
+%
+\newcite{dyer2015transition} utilize an indexable LSTM as a neural
+stack for transition-based parsing.
+%
+Similarly, \newcite{bowman2016fast} utilize both a stack and buffer
+for sentence comprehension by utilizing an indexable structure and
+performing computations with indices to these structures.
+%
+Finally, recent work models long distance relationships using the
+dynamic composability in ApolloCaffe, a fork of the Caffe library
+\cite{jia2014caffe}, to build different network structures based on
+parse trees.
