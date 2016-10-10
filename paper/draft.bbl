@@ -39,6 +39,12 @@ David Chiang.
   Computational Linguistics}, pages 456--463. Association for Computational
   Linguistics.
 
+\bibitem[\protect\citename{Chollet}2015]{chollet2015keras}
+Fran\c{c}ois Chollet.
+\newblock 2015.
+\newblock Keras.
+\newblock \url{https://github.com/fchollet/keras}.
+
 \bibitem[\protect\citename{Cohn \bgroup et al.\egroup }2009]{cohn2009inducing}
 Trevor Cohn, Sharon Goldwater, and Phil Blunsom.
 \newblock 2009.
@@ -106,6 +112,14 @@ David~M Magerman.
   Computational Linguistics}, pages 276--283. Association for Computational
   Linguistics.
 
+\bibitem[\protect\citename{Pennington \bgroup et al.\egroup
+  }2014]{pennington2014glove}
+Jeffrey Pennington, Richard Socher, and Christopher~D Manning.
+\newblock 2014.
+\newblock Glove: Global vectors for word representation.
+\newblock {\em Proceedings of the Empiricial Methods in Natural Language
+  Processing (EMNLP 2014)}, 12:1532--1543.
+
 \bibitem[\protect\citename{Schabes and Waters}1995]{Schabes1995}
 Yves Schabes and Richard~C. Waters.
 \newblock 1995.
@@ -129,6 +143,13 @@ Kai~Sheng Tai, Richard Socher, and Christopher~D. Manning.
 \newblock {\em Proceedings of the 53rd Annual Meeting of the Association for
   Computational Linguistics and the 7th International Joint Conference on
   Natural Language Processing}, pages 1556--1566.
+
+\bibitem[\protect\citename{{Theano Development Team}}2016]{theano}
+{Theano Development Team}.
+\newblock 2016.
+\newblock {Theano: A {Python} framework for fast computation of mathematical
+  expressions}.
+\newblock {\em arXiv e-prints}, abs/1605.02688, May.
 
 \bibitem[\protect\citename{Zhang \bgroup et al.\egroup }2016]{zhang2016top}
 Xingxing Zhang, Liang Lu, and Mirella Lapata.

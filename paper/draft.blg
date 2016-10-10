@@ -1,48 +1,48 @@
-This is BibTeX, Version 0.99d (TeX Live 2013)
+This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: draft.aux
 The style file: acl.bst
 Database file #1: coling2016.bib
 Warning--empty journal in joshi1991tree
-You've used 18 entries,
+You've used 21 entries,
             2490 wiz_defined-function locations,
-            655 strings with 8449 characters,
-and the built_in function-call counts, 8185 in all, are:
-= -- 882
-> -- 321
+            671 strings with 8897 characters,
+and the built_in function-call counts, 9183 in all, are:
+= -- 992
+> -- 353
 < -- 9
-+ -- 109
-- -- 108
-* -- 573
-:= -- 1276
-add.period$ -- 77
-call.type$ -- 18
-change.case$ -- 126
-chr.to.int$ -- 18
-cite$ -- 19
-duplicate$ -- 361
-empty$ -- 605
-format.name$ -- 131
-if$ -- 1757
++ -- 119
+- -- 118
+* -- 640
+:= -- 1441
+add.period$ -- 89
+call.type$ -- 21
+change.case$ -- 143
+chr.to.int$ -- 21
+cite$ -- 22
+duplicate$ -- 401
+empty$ -- 684
+format.name$ -- 144
+if$ -- 1963
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 18
-newline$ -- 110
-num.names$ -- 54
-pop$ -- 146
+missing$ -- 20
+newline$ -- 128
+num.names$ -- 63
+pop$ -- 162
 preamble$ -- 1
-purify$ -- 144
+purify$ -- 164
 quote$ -- 0
-skip$ -- 289
+skip$ -- 324
 stack$ -- 0
-substring$ -- 420
-swap$ -- 114
+substring$ -- 466
+swap$ -- 120
 text.length$ -- 9
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 144
+type$ -- 168
 warning$ -- 1
-while$ -- 69
-width$ -- 22
-write$ -- 253
+while$ -- 77
+width$ -- 24
+write$ -- 295
 (There was 1 warning)

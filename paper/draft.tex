@@ -379,7 +379,7 @@ recurrent tree networks use the hidden state from the parent.
 Utilizing the parent's hidden state rather than the sequentially previous hidden
 state, the recurrent connection can travel down the branches of a tree.
 %
-An example of a recurrent tree network is shown in \ref{fig:rtn}.
+An example of a recurrent tree network is shown in Figure \ref{fig:rtn}.
 
 
 
@@ -661,9 +661,9 @@ The metrics used in the linearization task were taken from previous work, who ar
 
 
 \subsection{Results}
+\label{sec:results}
 
-
-\begin{figure}
+\begin{table}
 \centering
 \begin{tabular}{|l|p{2cm}|c|c|c|}
 \cline{3-4}
@@ -676,12 +676,12 @@ Fergus-N &  Convolution &  58.17\% & 57.40\%  & 1.97s \\ \cline{2-5}
 \hline
 Fergus-R &  Convolution &  67.62\% & 57.04\% & 0.30s \\ \cline{2-5}
          &  Token       &  82.65\% & 62.73\% & 0.36s\\ \cline{2-5}
-         &  Minimal Token & 10.13\% & 19.66\% & 0.54 \\ \cline{2-5}
+         &  Minimal Token & 10.13\% & 19.66\% & 0.54s \\ \cline{2-5}
 \hline
 \end{tabular}
-\label{table:accresults}
 \caption{For each supertag and embedding pair, the mean accuracy of supertag classification before and after the A* algorithm is shown. Also shown is the median running time---which includes model computation and A* search.}
-\end{figure}
+\label{table:accresults}
+\end{table}
 
 Table \ref{table:accresults} shows the results of supertag classification using the stochastic tree models is shown. 
 %
@@ -699,7 +699,7 @@ The Fergus-N model out-performed the Fergus-R model on supertag classification w
 
 
 
-\begin{figure}
+\begin{table}
 \centering
 \begin{tabular}{|l|p{3cm}|p{2.5cm}|r|}
 \cline{3-4}
@@ -716,9 +716,9 @@ Fergus-R & Convolution & 68.22\% & 74.70\% \\ \cline{2-4}
          & Minimal Token &  58.23 \% & 65.04\% \\ \cline{2-4}
 \hline
 \end{tabular}
-\label{table:linresults}
 \caption{Shown above as accuraccy is the percentage of tokens in the linearized strings that are in correct positions according to an edit distance measure.}
-\end{figure}
+\label{table:linresults}
+\end{table}
 
 \section{Related Work}
 \label{sec:relatedwork}
@@ -768,21 +768,51 @@ sabbatical leave from Rutgers to Stone.
 \appendix
 
 \section{Appendix}
+\label{sec:appendix}
 
 
-\begin{figure}
+\begin{table}[t!]
 \centering
-\begin{tabular}{|p{6cm}|r|}
+\begin{tabular}{lr}
+\begin{tabular}[t]{|p{6cm}|r|}
 \hline
-Model Parameter & Value \\ \hline
+\textbf{Model Parameter} & \textbf{Value} \\ \hline
+\hline \multicolumn{2}{|c|}{\textbf{Fergus-N Parameters}} \\ \hline
+Fully connected layer size & 256 \\ \hline
+Batch size & 128 \\ \hline
+\hline  \multicolumn{2}{|c|}{\textbf{Fergus-R Parameters}} \\ \hline
+Fully connected layer size & 256 \\ \hline 
+Hidden state size & 128 \\ \hline
+Batch size & 16 \\ \hline
+\hline \multicolumn{2}{|c|}{\textbf{Embedding Parameters}} \\ \hline
 Convolution filter size & 48 \\ \hline
-Optimization Algorithm & ADAM \\ \hline
-Learning Rate & 0.0001 \\ \hline
-Dense-Layer Dropout Rates & 0.5 \\ \hline
+Syntactic category embedding size & 32 \\ \hline
+Node role embedding size & 32 \\ \hline
+Word embedding size \newline
+\cite{pennington2014glove} & 300 \\ \hline
 \end{tabular}
-\label{table:params}
-\caption{.}
-\end{figure}
+&
+\begin{tabular}[t]{|p{6cm}|r|}
+\hline
+\textbf{Model Parameter} & \textbf{Value} \\ \hline
+\hline \multicolumn{2}{|c|}{\textbf{Language Model Parameters}} \\ \hline
+Hidden state size & 368 \\ \hline
+Batch size & 32 \\ \hline
+\hline \multicolumn{2}{|c|}{\textbf{Optimization Parameters}} \\ \hline
+Optimization Algorithm & ADAM \\ \hline
+Fergus-R and Fergus-N Learning Rate & 1e-4 \\ \hline
+Language Model Learning Rate & 0.01 \\ \hline
+Fully-Connected Dropout Rate & 0.5 \\ \hline
+Recurrent Weight Dropout Rate & 0.2 \\ \hline
+$L_2$ Weight Decay & 1e-6 \\ \hline
+Max gradient norm & 10.0 \\ \hline
+Gradient clip threshold & 5.0 \\ \hline
+\end{tabular}
+\end{tabular}
+\caption{The parameters for the Fergus-R, Fergus-N, and language models.  The
+exact specifications in configuration files can be found in the code repository that accompanies this paper.}
+\label{tab:params}
+\end{table}
 
 \subsection{Data}
 
@@ -790,7 +820,7 @@ This work used data processed from the Wall Street Journal portion of the Treeba
 
 \subsection{Model parameters}
 
-
+All of the models were implemented in the Keras \cite{chollet2015keras} and Theano \cite{theano} libraries.  The specific parameters that were used are shown in Table \ref{tab:params}.  The parameters were selected by measured performance on the development portion of the dataset.  In the accompanying code repository, the full experiment parameters---including progammatic parameters controlling the experimental design---are specified in configuration files. 
 
 \end{document}
 
