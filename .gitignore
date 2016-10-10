@@ -2,3 +2,4 @@
 *.md
 *.pyc
 *.csv
+.ipynb_checkpoints/*

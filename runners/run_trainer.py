@@ -1,8 +1,7 @@
-"""An implemenation of FERGUS's supertagger
+"""Training routine for the Fergus-R and Fergus-N models
 
 Usage:
     run_trainer.py (fergusr|fergusn) (convolutional|token|shallowconv|minimaltoken)
-    run_trainer.py fergusn 
     run_trainer.py (-h | --help)
 
     fergusr                   train the fergus-r model
@@ -62,28 +61,3 @@ if __name__ == "__main__":
         print("Some more info: {}".format(sys.exc_info()))
         print(traceback.format_exc())
           
-        # elif args['debug']:
-        #     kwargs = {"mode":NanGuardMode(nan_is_error=True, 
-        #                                   inf_is_error=True, 
-        #                                   big_is_error=True)}
-        #     #stage(igor)
-        #     #model = TrainingModel(igor)
-        #     #model.make(kwargs)
-        #     #model.debug()
-        #     #model.train()
-
-        #     model = TrainingModel.from_yaml(args['<config_file>'], kwargs)
-        #     model.train()
-
-        # elif args['profile']:
-        #     kwargs = {"profile": True}
-        #     stage(igor)
-        #     model = TrainingModel(igor)
-        #     model.make(kwargs)
-        #     model.profile(num_iterations=1)
-
-        # elif args['visualize']:
-        #     stage(igor)
-        #     model= TrainingModel(igor)
-        #     model.make()
-        #     model.plot()
