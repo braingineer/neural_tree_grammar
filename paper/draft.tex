@@ -42,11 +42,13 @@ stochastic tree grammar in a neural architecture.
 This framework can exploit state-of-the-art methods for modeling word
 sequences and generalizing across vocabulary.
 %
-Our methods also embed elementary tree structures using convolutional
-coding to generalize over tree structures.
+We also induce embeddings to generalize over elementary tree
+structures and exploit a tree recurrence over the input structure to
+model long-distance influences between NLG choices.
 %
 We evaluate the models on the task of linearizing unannotated
-dependency trees, achieving improvements over previous methods.
+dependency trees, documenting the contribution of our modeling
+techniques to improvements in both accuracy and run-time.
 
 \end{abstract}
 
@@ -81,9 +83,9 @@ The first step to producing a linearized string is to assign each item
 an appropriate \emph{supertag}---a fragment of a parse tree with a
 leaf left open for a lexical item---using a stochastic model.
 %
-This involves applying a learned model to make predictions for the
-syntax of each item and then searching over the predictions to find a
-consistent assignment for the entire sentence.
+This process involves applying a learned model to make predictions for
+the syntax of each item and then searching over the predictions to
+find a consistent assignment for the entire sentence.
 %
 The resulting assignments allow for many possible surface realization
 outputs because they can underdetermine the order and attachment of
@@ -146,7 +148,7 @@ Inducing a tree grammar involves fixing a formal inventory of
 structures and operations for elementary trees and then inferring
 instances of those structures to match corpus data.
 
-\subsection{The Grammar Formalism}
+\subsection{Grammar Formalism}
 
 The canonical tree grammar is perhaps lexicalized tree-adjoining
 grammar (LTAG) \cite{joshi1991tree}.
@@ -175,7 +177,7 @@ For example, the Tree Insertion Grammar allows for adjunction as long as it is e
 %
 Tree Substitution Grammars, meanwhile, allow for no adjunction and
 only substitutions \cite{cohn2009inducing}.
-
+%
 We adopt one particular restriction on adjunction, called
 sister-adjunction or \emph{insertion}, which allows trees to attach to
 an interior node and add itself as a first or last child
@@ -184,7 +186,7 @@ an interior node and add itself as a first or last child
 Chiang's sister-adjunction allows for the flat structures in
 the Penn Treebank while limiting the formalism to context-free power.
 
-\subsection{Inducing a tree grammar}
+\subsection{Grammar Induction}
 
 In lexicalized tree grammars, the lexicon and the grammatical rules
 are one and the same.
@@ -236,54 +238,60 @@ complexity by forcing it to follow Dirichlet or Pitman-Yor processes
 \section{Neural Representations}
 \label{sec:neural}
 
-%There is a tension between vectorized representations and dynamic, nonlinear data structures.
+The grammar induction of \ref{sec:tree} allows us to constrcut an
+inventory of supertags to match a corpus.  For NLG, we also need to
+predict how likely a supertag is to fit a specific lexical item in the
+context of a generation task.  We approach this problem using neural
+networks. 
 %
-%The tension is emphasized by requirement of specialized hardware that both dramatically increases the data throughput and reduces the space of representable models\footnote{Specifically, to run on Graphical Processing Units (GPUs), model structure must be known at compile time or incur heavy computational costs.}.
+In particuaar, this work makes two contributions to improve stochastic
+tree modeling with neural networks.
 %
-This work makes two contributions to improve stochastic tree modeling with neural networks.
-%This work makes two contributions to reduce that tension and progress methodologies for representing nonlinear data structures in linear spaces.
+First, we represent supertags as vectors through embedding techniques
+that enable to model to generalize naturally over complex, but related
+structures.
 %
-First, supertags are represented as vectors through embedding
-techniques that enable to model to generalize naturally over complex, but
-related structures.
+Second, we address the hierarchical dependence between choices using a
+recurrent tree network that can capture long-distance influences as
+well as local ones.
 %
-Second, hierarchical dependence between choices is modeled using a recurrent tree
-network that can capture long-distance influences as well as local ones.
-%
-%recurrent neural network variant that isn't restricted to conditioning hidden states on their temporal predecessors.
-%In brief, this technique is made possible through recent advanced in StackLSTMs \cite{dyer2015transition} and the use of topological indexing of recurrent states.% hidden states of
-
+We now describe these representations in more detail.
 
 \subsection{Embedding Supertags}
 
-%The first step to embedding supertags with a convolutional neural network is to
-%embed each of its nodes and combine them to form a tensor.
-%
-%
-%To embed a supertag, we first embed all of its nodes to form a tensor and then use a
-%To embed a supertag and summarize it into a vector, each of its nodes are
-%first embedded, combined to form a tensor, and then
-%We embed supertags by embed each of its nodes, combine
-To embed a supertag, we embed each node, group the resulting vectors
-to form a tensor, and then summarize the tensor into a single vector
-using a series of convolutional neural networks.
-%
-Since the weights of a convolutional neural network are optimized
-during training, the data should determine which parts of the supertag
-are important.
-%
-%The purpose of convolutional coding is to allow the data to determine which facets of a supertag are relevant and useful.
-%
-The more usual alternative approach is to treat each supertag as the atomic
-unit---essentially a statistical singleton---and map it either to a feature or
-an embedding vector.
-%
-We evaluate our contribution and compare these two approaches to get a sense for whether convolutional coding robustly generalizes across supertags.
+Different supertags for the same word can encode differences in the
+item's own combinatory syntax, differences in argument structure, and
+differences in word order.  Accordingly, words have many related
+supertags, with substantial overlaps in structure, and, presumably,
+corresponding similarities in their patterns of occurrence.  A
+traditional machine learning approach to supertag prediction would
+treat individual supertags as atoms for classification; geenralizing
+across supertags would require linking model parameters to handcrafted
+features or backoff categories.
 
+By contrast, neural techniques work by embedding such tokens into a
+vector space. This process learns an abstract representation of tokens
+that clusters similar items together and makes further predictions
+as a function of those items' learned features.  The resulting
+abilities to generalize across sparse data seems to be one of the most
+improtant reasons for the success of deep learning in NLP.
 
-To explain our technique, we begin by observing that each elementary
-tree is a complex structure with nodes labeled by category and
-assigned a role that enables further tree operations.
+The simplest way to embed supertags is simply to treat each structure
+as distinct token that indexes a corresponding learned vector.  This
+places no constraints on the learned similarity function, but it also
+ignores the hieararchical structure of the elementary trees
+themselves.  Previous work on deep learning with tree structures has
+suggested that convolutional coding can produce embeddings that
+directly exploit similarities in tree structure.  Thus, we developed
+analogous techniques to encode supertags based on their underlying
+tree structure.  In partiuclar, to embed a supertag, we embed each
+node, group the resulting vectors to form a tensor, and then summarize
+the tensor into a single vector using a series of convolutional neural
+networks.
+
+Note that each elementary tree is a complex structure with nodes
+labeled by category and assigned a role that enables further tree
+operations.
 %
 The root node's role represents the overall action associated with
 that elementary tree---either substitution or insertion.
@@ -338,7 +346,7 @@ series of convolutional layers.
 The final product, a vector per supertag, is aggregated with the other vectors
 and turned into an embedding matrix.
 %
-This is visualized in on the right Figure \ref{fig:spineembedding}.
+This is visualized in on the right in Figure \ref{fig:spineembedding}.
 %
 During training and test time, supertags are input as indices and their feature
 representations retrieved as an embedding.
@@ -357,8 +365,11 @@ Importantly, the convolutional layers are connected to the computational graph d
  \label{fig:rtn}
 \end{figure*}
 
-To model the relationship between the supertags in the derivation tree, we use
-a recurrent tree network.
+Our models predict supertags as a function of the target word and its
+context.  Neural networks make it possible to generalize over such
+contexts by learning to represent them with a hidden state vector that
+aggregates and clusters information from the relevant history.  Our
+approach is to do this using a recurrent tree network.
 %
 While recurrent neural networks normally use the previous hidden state in the sequential order of the inputs,
 %require  the hidden state to be from the
@@ -416,16 +427,24 @@ by creating locally linear, homogenous computations.
 \section{Models}
 \label{sec:models}
 
-In this work, we present two stochastic tree models which represent different modeling decisions.
+To analyze the representations we describe in \ref{sec:tree} and
+\ref{sec:neural}, we developed two alternative architectures for
+predicting supertags in context.
 %
-The first, Fergus-N\footnote{Fergus-N is shorthand for Fergus-Neuralized}, is a
-reimplementation of \newcite{bangalore2000exploiting}'s original FERGUS model but
-implemented in a feed-forward neural network.
+The first is a feed-forward neural network designed to solve a closely
+analogous task to the supertagging step of
+\newcite{bangalore2000exploiting}'s original FERGUS model.
 %
-The second model, Fergus-R\footnote{Fergus-R is shorthand for Fergus-Recurrent}, utilizes a recurrent tree network.
+We call it Fergus-N (for Neuralized).
 %
-Fergus-N serves as a baseline model to which we compare the recurrent tree network.
-
+The second uses a recurrent tree network to model the generation
+context.
+%
+Because it has this richer context representation, it takes advantage
+of a slightly different chracterization of the supertag prediction
+problem to streamline the problem solving involved in using the model.
+%
+We call this Fergus-R (for Recurrent).
 
 For both stochastic tree models, a recurrent neural network language model is used to complete the linearization task.
 %Both models produce partial results which a recurrent neural network language model is used to complete the linearization task.
@@ -444,21 +463,30 @@ Fergus-N is a stochastic tree model which uses local parent-child information as
 %
 Each parent-child pair is treated as independent of all others.
 %
-The probability of the parent's supertag is computed using an embedding of the pair's lexical material and an embedding of the child's supertag.
+The probability of the parent's supertag is predicted using an embedding of the pair's lexical material and an embedding of the child's supertag.
 %
-During training, the negative log probability of the observed parent supertags is minimized for each parent-child pair.
+(Our experiments compare the different embedding options surveyed in
+\ref{sec:neural}.) 
 %
-This objective function is formally defined in Eq. \ref{eq:fergusn_obj} where $tag_p$ is the parent supertag, $tag_c$ is the child supertag, $lex_p$ is the parent's lexical material, and $lex_c$ is the child's lexical material.
+Training maximizes the likelihood of the training data according to
+the model.
+%
+Formally, our objective is to minimize the negative log probability of
+the observed parent supertags for each parent-child pair, as formally
+defined in Eq. \ref{eq:fergusn_obj}.
+%
+\begin{align}
+&min_{\theta} -[\sum_p\sum_{p\to c} log[P_\theta(tag_{p} | lex_{p}, lex_{c}, tag_{c})] + \sum_c log[P_\theta(tag_{c} |lex_{p}, lex_{c})]] \label{eq:fergusn_obj}
+\end{align}
+%
+Here $tag_p$ is the parent
+supertag, $tag_c$ is the child supertag, $lex_p$ is the parent's
+lexical material, and $lex_c$ is the child's lexical material.
 %
 Note that the probability of supertags for the leaves of the tree are computed
 with respect to their parent's lexical material.
 
-\begin{align}
-&min_{\theta} -[\sum_p\sum_{p\to c} log[P_\theta(tag_{p} | lex_{p}, lex_{c}, tag_{c})] + \sum_c log[P_\theta(tag_{c} |lex_{p}, lex_{c})]] \label{eq:fergusn_obj}
-\end{align}
-
-
-The model is implemented as a feed-forward neural network that computes a probability distribution over parent supertags conditioned on lexical material and the child's supertag.
+The model is implemented as a feed-forward neural network.
 %
 Equation \ref{eq:fergusn} details the model formulation.
 %
@@ -486,7 +514,9 @@ The final operation induces a probability distribution over the treelet and leaf
 \end{align}
 
 
-A decoding step uses the probability distributions to compute a high probability assignment for all supertags simueltaneously.
+At generation time, we are given a full dependency tree.  A decoding
+step is necessary to compute a high probability
+assignment for all supertags simultaneously.
 %
 There are two primary difficulties that arise in this computation.
 %
@@ -514,11 +544,6 @@ The search concludes either when a single complete tree has been found.\footnote
 Fergus-R is a stochastic tree model implemented in a top-down recurrent tree network and augmented with soft attention.
 %
 For each node in the input dependency tree, soft attention---a method which learns a vectorized function to weight a group of vectors and sum into a single vector---is used to summarize its children.
-%
-
-The advantage of using a recurrent tree is that nodes are able to be informed of their ancestors.
-%
-Each node is further informed using soft attention over its children ---a method which learns a vectorized function to weight a group of vectors and sum into a single vector.
 %
 The soft attention vector and the node's embedded lexical material serve as the input to the recurrent tree.
 %
