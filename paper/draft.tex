@@ -48,7 +48,7 @@ model long-distance influences between NLG choices.
 %
 We evaluate the models on the task of linearizing unannotated
 dependency trees, documenting the contribution of our modeling
-techniques to improvements in both accuracy and run-time.
+techniques to improvements in both accuracy and run time.
 
 \end{abstract}
 
@@ -75,13 +75,13 @@ effectively, match human choices more closely, and enable more
 efficient computations than traditional techniques.
 
 We adopt the characterization of syntactic choice from
-\newcite{bangalore2000exploiting}, which uses a stochastic tree model
-and a language model to produce a linearized string from an unordered,
-unlabeled dependency graph.
+\newcite{bangalore2000exploiting}: the problem is to use a stochastic
+tree model and a language model to produce a linearized string from an
+unordered, unlabeled dependency graph.
 %
 The first step to producing a linearized string is to assign each item
 an appropriate \emph{supertag}---a fragment of a parse tree with a
-leaf left open for a lexical item---using a stochastic model.
+leaf left open for the lexical item.
 %
 This process involves applying a learned model to make predictions for
 the syntax of each item and then searching over the predictions to
@@ -95,13 +95,13 @@ To finish the linearization, a language model is used to select the
 most likely surface form from among the alternatives.
 %
 While improving the language model would improve the linearized string,
-this work focuses on more accurately predicting the correct supertags from
+we focus here on more accurately predicting the correct supertags from
 unlabeled dependency trees.
 
 Our work exploits deep learning to improve the model of supertag
 assignment in two ways.
 %
-First, we analyze the use of embedding technques to generalize across
+First, we analyze the use of embedding techniques to generalize across
 supertags.  
 %
 Neural networks offer a number of architectures that can cluster tree
@@ -120,7 +120,7 @@ technique used to embed supertags, and then by comparing a
 feed-forward model against our recurrent tree model.
 
 Our presentation begins in \ref{sec:tree} with an introduction to tree
-grammars and a deterministic metholodogy for inducing the elementary
+grammars and a deterministic methodology for inducing the elementary
 trees of the grammar.
 %
 Next, \ref{sec:neural} presents the techniques we have developed to
@@ -193,7 +193,7 @@ are one and the same.
 %
 The set of possible grammatical moves which can be made are simultaneously the set of possible words which can be used next.
 %
-This means inducing a tree grammar from a dataset is a matter of inferring the set of constructions in the data.
+This means inducing a tree grammar from a data set is a matter of inferring the set of constructions in the data.
 
 %%%%\tabularnewline
 
@@ -238,13 +238,13 @@ complexity by forcing it to follow Dirichlet or Pitman-Yor processes
 \section{Neural Representations}
 \label{sec:neural}
 
-The grammar induction of \ref{sec:tree} allows us to constrcut an
+The grammar induction of \ref{sec:tree} allows us to construct an
 inventory of supertags to match a corpus.  For NLG, we also need to
 predict how likely a supertag is to fit a specific lexical item in the
 context of a generation task.  We approach this problem using neural
 networks. 
 %
-In particuaar, this work makes two contributions to improve stochastic
+In particular, this work makes two contributions to improve stochastic
 tree modeling with neural networks.
 %
 First, we represent supertags as vectors through embedding techniques
@@ -260,31 +260,31 @@ We now describe these representations in more detail.
 \subsection{Embedding Supertags}
 
 Different supertags for the same word can encode differences in the
-item's own combinatory syntax, differences in argument structure, and
+item's own combinatorial syntax, differences in argument structure, and
 differences in word order.  Accordingly, words have many related
 supertags, with substantial overlaps in structure, and, presumably,
 corresponding similarities in their patterns of occurrence.  A
 traditional machine learning approach to supertag prediction would
-treat individual supertags as atoms for classification; geenralizing
+treat individual supertags as atoms for classification; generalizing
 across supertags would require linking model parameters to handcrafted
-features or backoff categories.
+features or back-off categories.
 
 By contrast, neural techniques work by embedding such tokens into a
 vector space. This process learns an abstract representation of tokens
 that clusters similar items together and makes further predictions
 as a function of those items' learned features.  The resulting
 abilities to generalize across sparse data seems to be one of the most
-improtant reasons for the success of deep learning in NLP.
+important reasons for the success of deep learning in NLP.
 
 The simplest way to embed supertags is simply to treat each structure
 as distinct token that indexes a corresponding learned vector.  This
 places no constraints on the learned similarity function, but it also
-ignores the hieararchical structure of the elementary trees
+ignores the hierarchical structure of the elementary trees
 themselves.  Previous work on deep learning with tree structures has
 suggested that convolutional coding can produce embeddings that
 directly exploit similarities in tree structure.  Thus, we developed
 analogous techniques to encode supertags based on their underlying
-tree structure.  In partiuclar, to embed a supertag, we embed each
+tree structure.  In particular, to embed a supertag, we embed each
 node, group the resulting vectors to form a tensor, and then summarize
 the tensor into a single vector using a series of convolutional neural
 networks.
@@ -308,7 +308,7 @@ distinct vocabulary tokens, mapped to integers, and used to retrieve a vector
 representation that is learned during training.
 %
 The vectors are grouped into a tensor by placing the root node into the
-first cell of the first row and left-aligning the decendents in the subsequent rows.
+first cell of the first row and left-aligning the descendants in the subsequent rows.
 %
 The two tensors are combined by concatenating along the embedding dimension.
 %
@@ -379,7 +379,7 @@ recurrent tree networks use the hidden state from the parent.
 Utilizing the parent's hidden state rather than the sequentially previous hidden
 state, the recurrent connection can travel down the branches of a tree.
 %
-An example of a recurrent tree network is shown in eFigure \ref{fig:rtn}.
+An example of a recurrent tree network is shown in figure \ref{fig:rtn}.
 
 
 
@@ -422,7 +422,7 @@ the same operation will be applied to the entire data structure.
 Normally, tree operations require flow control, making homogeneity impossible.
 %
 However, using topological indices and a tree state eliminates the need for flow control
-by creating locally linear, homogenous computations.
+by creating locally linear, homogeneous computations.
 
 \section{Models}
 \label{sec:models}
@@ -441,7 +441,7 @@ The second uses a recurrent tree network to model the generation
 context.
 %
 Because it has this richer context representation, it takes advantage
-of a slightly different chracterization of the supertag prediction
+of a slightly different characterization of the supertag prediction
 problem to streamline the problem solving involved in using the model.
 %
 We call this Fergus-R (for Recurrent).
@@ -537,7 +537,7 @@ Once selected, the subtree is attached to the possible supertags of its parent t
 %
 These resulting subtrees are placed into the priority queue and the algorithm iterates to progress the search.
 %
-The search concludes either when a single complete tree has been found.\footnote{Although, the data has some noise so that sometimes there is no complete tree that can possibly be formed}
+The search succeeds when the first complete tree has been found.\footnote{Although, the data has some noise so that sometimes there is no complete tree that can possibly be formed}
 
 \subsection{Model 2: Fergus-R}
 
@@ -613,7 +613,7 @@ common cleaning operations were not performed.} to simulate realistic scenarios.
 
 The difficulty of selecting orderings with a language model is that the possible linearizations can grow exponentially.
 %
-In particular, our implementations result in a large amount of insertion trees\footnote{Many of the validation examples had more than $2^{40}$ possible linearizations.}.
+In particular, our implementations result in a large amount of insertion trees.\footnote{Many of the validation examples had more than $2^{40}$ possible linearizations.}
 %
 We approach this problem using a prefix tree which stores the possible linearizations as back-pointers to their last step and the word for the current step. 
 %
@@ -631,17 +631,17 @@ use a feed-forward Fergus-N architecture or a recurrent Fergus-R
 architecture.  Each architecture can embed supertags \emph{minimally},
 by a simple one-hot vector; \emph{atomically}, by learning an
 embedding vector corresponding to each supertag; or
-\emph{structureally}, by using a convolutional coding over the
+\emph{structurally}, by using a convolutional coding over the
 supertag tree structure.
 
 \subsection{Training}
 
-We trained six such models using a common experimental plantform.  We
+We trained six such models using a common experimental platform.  We
 started from the Wall Street Journal sections of the Penn Treebank,
 which have been previously used for evaluating statistical tree
-grammars \cite{chiang2000statistical}\footnote{A possible additional
+grammars \cite{chiang2000statistical}.\footnote{A possible additional
   data source, the data from the 2011 Shared Task on Surface
-  Realization, was not available}.
+  Realization, was not available.}
 %
 Our data pipeline breaks each sentence in the treebank into component
 elementary trees and then represents the sentence in terms of a
@@ -663,7 +663,7 @@ in the appendix.  Our code is available XXX.
 
 We evaluate the performance of the models in several ways.  First, we
 look at the accuracy of the supertag predictions directly output by
-each model.  Second, we look at the accurace of the final supertags
+each model.  Second, we look at the accuracy of the final supertags
 obtained by decoding the model predictions to the best-ranked
 consistent global assignment.  These metrics directly assess the
 ability of the models to successfully learn the target distributions.
@@ -671,13 +671,13 @@ ability of the models to successfully learn the target distributions.
 Next, we evaluate the models on the full NLG task, including
 linearization.  
 %
-The linearization tasks licenses more freedom in supertag
-classifications because it may have the same root and leaf syntactic
-categories but differ in minor constructions, such as number of
-arguments.
+The linearization task allows more freedom in supertag
+classifications because supertags may differ in minor ways, such as
+the projections present along the spine, which will not affect
+generation output for a particular target input.
 %
-The freedom allows for models to be more generalized and less fit to
-the specific supertags, but at the same time, it also mutes the
+The freedom means models may not be penalized based on decisions that
+don't matter---thus, at the same time, it also mutes the
 distinctions between classification decisions.
 %
 We report XXXMEASURE, following \cite{}.
@@ -739,11 +739,11 @@ The convolution encoding seems to work better with Fergus-N.
 %
 This merits further investigation: it might be because Fergus-N
 predicts one supertag as a function of another, and so the
-compositional relationships among the two trees matters more---or
-because Fergus-R's contextualized decisions depend on similarities
-among supertags (involving argument structure or information
-structure) that are difficult for the convolutional coding to
-represent or learn.
+compositional relationships among the two trees are more
+important---or because Fergus-R's contextualized decisions depend on
+similarities among supertags (involving argument structure or
+information structure) that are difficult for the convolutional coding
+to represent or learn.
 
 The overall best results come from Fergus-R, suggesting that it is
 worthwhile to take additional context into account in this task.
@@ -753,14 +753,14 @@ sentence with Fergus-R is just one sixth that of Fergus-N.
 %
 We suspect that there is a general lesson in this speedup: because
 neural models can be more flexible about the information they take
-into account in decisions, it's especially important in designing
+into account in decisions, it's especially advantageous in designing
 neural architectures to break a problem down into decisions that can
 be combined easily.
 
 Finally, decoding the network generally leads to lower accuracy.
 %
 It seems that our models are not doing a good job of using the
-predictions it makes to triangulate to accurate and consistent
+predictions they make to triangulate to accurate and consistent
 supertags. 
 %
 This suggests that the models could be improved by taking more or
@@ -794,7 +794,7 @@ differences in NLG performance are attenuated.
 %
 We note by comparison that Bangalore and Rambow report an accuracy of
 74.9\% in their best evaluation of FERGUS---on a data set of just 100
-sentences with an average lenth of XXX.
+sentences with an average length of XXX.
 %
 Our evaluation, on XXX sentences with an average length of XXX, is much
 more strenuous.
@@ -802,37 +802,89 @@ more strenuous.
 \section{Related Work}
 \label{sec:relatedwork}
 
-There are several lines of related work which explore stochastic tree models, ranging exploration with recurrent neural networks to agglomerative pairwise associations. 
+There are several lines of related work which explore stochastic tree
+models from the standpoint of parsing and understanding, including
+networks that maintain state using recurrences and networks that
+agglomerate information using tree traversals.
 %
+We think the perspective given by NLG is instructive.
+
 Most similar to ours, is the top down tree structure of \newcite{zhang2016top}.
 %
-In this model, first, two long short-term memory (LSTM) networks are used to make branch exploration decisions, and then an additional two LSTM networks are used to continue along these branches. 
+In this model, first, two long short-term memory (LSTM) networks are
+used to make branch exploration decisions, and then an additional two
+LSTM networks are used to continue along these branches.
 %
-The work of \newcite{Tai2015} similarly use an LSTM, but instead work from the leaves upward to merge the hidden states of children inside the recurrent step. 
+The work of \newcite{Tai2015} similarly use an LSTM, but instead work
+from the leaves upward to merge the hidden states of children inside
+the recurrent step.
 %
-The upward merging of children to form representations for parents has also been studied as pairwise agglomerations using recursive neural networks \cite{Socher2010}.
+The upward merging of children to form representations for parents has
+also been studied as pairwise agglomerations using recursive neural
+networks \cite{Socher2010}.
 
-A growing body of work investigates modeling long distance relationships using efficient stacks in modern neural architecture. 
+A growing body of work investigates modeling long distance
+relationships using efficient stacks in modern neural architecture.
 %
-\newcite{dyer2015transition} utilize an indexable LSTM as a neural stack for transition-based parsing.  
+\newcite{dyer2015transition} utilize an indexable LSTM as a neural
+stack for transition-based parsing.
 %
-Similarly, \newcite{bowman2016fast} utilize both a stack and buffer for sentence comprehension by utilizing an indexable structure and performing computations with indices to these structures. 
+Similarly, \newcite{bowman2016fast} utilize both a stack and buffer
+for sentence comprehension by utilizing an indexable structure and
+performing computations with indices to these structures.
 %
-Finally, recent work models long distance relationships using the dynamic composability in ApolloCaffe, a fork of the Caffe library \cite{jia2014caffe}, to build different network structures based on parse trees \cite{Andreas2016LearningTC}.
+Finally, recent work models long distance relationships using the
+dynamic composability in ApolloCaffe, a fork of the Caffe library
+\cite{jia2014caffe}, to build different network structures based on
+parse trees \cite{Andreas2016LearningTC}.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-While many neural models of grammar have focused on parsing, there has been relatively less attention on generation.
+This paper has explored issues in deep learning of probabilistic tree
+grammars from the standpoint of natural language generation.  
 %
-This is in large part due to the different kinds of decisions that have to be made in order for generation to work. 
+For NLG, we need models that predict high-probability structures to
+encode deep linguistic relationships---rather than to infer deep
+relationships from surface cues.
+%
+This problem brings new challenges for learning, as it requires us to
+represent new kinds of linguistic elements and new kinds of structural
+context in order to capture the regularities involved.
+%
+Despite these challenges, however, the problem continues to have the
+mix of data sparsity, rich primitives and combinatorial
+interactions that has made deep learning attractive for use in natural
+language parsing and understanding.
 
+Of the range of models we surveyed here, the best combines a top down
+tree recurrence to cluster contexts with appropriate embedding methods
+to cluster syntactic and lexical elements.
+%
+Our evaluations suggest that the model is more accurate and faster
+than alternative techniques. 
+%
+However, it would still be good to analyze the performance of the
+model more deeply.
+%
+Can we get better results in the key decoding step?  How do human
+readers find the output of the system?
 
-The models outlined in this paper push forward methodologies for modeling tree grammars in neural networks. 
-
-A lot of work has to be done to take advantage of deep learning and translate that to tasks beyond parsing, especially language production tasks.
-
-This is a first step in a larger research program of stochastic generation models with the kind of generalization that deep learning techniques like word embeddings and recurrent neural networks give you. 
+Looking forward, we see this research a step towards learned
+models that capture more of the NLG task.
+%
+We plan to explore similar techniques in planning surface text from
+more properly semantic inputs or even from abstract communicative
+goals.
+%
+Further, we plan to integrate learned methods with knowledge-based
+techniques to offer designers more control over system output in
+specific applications.
+%
+Developing methods appropriate to such settings will require
+researchers to revisit the core problems of generalizing
+across linguistic structures and contexts---and, we hope, to build on
+and extend the provisional solutions we have explored here.
 
 \section*{Acknowledgments}
 
@@ -899,7 +951,7 @@ This work used data processed from the Wall Street Journal portion of the Treeba
 
 \subsection{Model parameters}
 
-All of the models were implemented in the Keras \cite{chollet2015keras} and Theano \cite{theano} libraries.  The specific parameters that were used are shown in Table \ref{tab:params}.  The parameters were selected by measured performance on the development portion of the dataset.  In the accompanying code repository, the full experiment parameters---including progammatic parameters controlling the experimental design---are specified in configuration files. 
+All of the models were implemented in the Keras \cite{chollet2015keras} and Theano \cite{theano} libraries.  The specific parameters that were used are shown in Table \ref{tab:params}.  The parameters were selected by measured performance on the development portion of the data set.  In the accompanying code repository, the full experiment parameters---including programmatic parameters controlling the experimental design---are specified in configuration files. 
 
 \end{document}
 
@@ -912,7 +964,7 @@ Model specifications
 Head to supertag mapper
 
 
-The data used in our experiments was taken from the Wall Street Jounral sections of the Treebank corpus.  
+The data used in our experiments was taken from the Wall Street Journal sections of the Treebank corpus.  
 
 For the unlabeled dependency trees, we used the derivation structures which resulted from the deterministic grammar induction (see \ref{}). 
 
