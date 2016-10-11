@@ -295,7 +295,7 @@ By contrast, neural techniques work by embedding such tokens into a
 vector space. This process learns an abstract representation of tokens
 that clusters similar items together and makes further predictions
 as a function of those items' learned features.  The resulting
-abilities to generalize across sparse data seems to be one of the most
+ability to generalize across sparse data seems to be one of the most
 important reasons for the success of deep learning in NLP.
 
 The simplest way to embed supertags is to treat each structure
@@ -321,17 +321,19 @@ The remaining nodes either have the substitution point role or the
 spine role---they are along the spine from root to the lexical
 attachment point, and thus provide targets for further insertion.
 
-The nodes of a supertag can be independently embedded and combined to form a
-tensor of embeddings.
+We first embed each node independently, then combined the vectors to
+form a tensor of embeddings.
 %
-Specifically, symbols representing the syntactic category and node roles are treated as
-distinct vocabulary tokens, mapped to integers, and used to retrieve a vector
-representation that is learned during training.
+Specifically, symbols representing the syntactic category and node
+roles are treated as distinct vocabulary tokens, mapped to integers,
+and used to retrieve a vector representation that is learned during
+training.
 %
-The vectors are grouped into a tensor by placing the root node into the
-first cell of the first row and left-aligning the descendants in the subsequent rows.
+The vectors are grouped into a tensor by placing the root node into
+the first cell of the first row and left-aligning the descendants in
+the subsequent rows.
 %
-The two tensors are combined by concatenating along the embedding dimension.
+The two tensors are concatenated along the embedding dimension.
 %
 This embed-and-group method is shown in on the left in Figure \ref{fig:spineembedding}.
 %the root node is in first cell in the first row and the subsequent nodes are
@@ -443,15 +445,17 @@ S_{tree}[t]&=~s_c \label{eq:rnnsetup}
 %\vspace*{-0.5cm}
 
 The use of topological indices allows for many recurrent tree networks to be
-run in parallel on a GPU, increasing the efficiency of the implementation.
+run in parallel on a GPU for efficiency.
 %
-The primary concern for running parallel GPU computations is homogeneity because
-the same operation will be applied to the entire data structure.
+GPU implementations must be formulated homogeneously so that 
+the same operations are always applied to the entire data structure.
 %
-Normally, tree operations require flow control, making homogeneity impossible.
+Normally, tree operations require flow control, making homogeneity
+impossible.
 %
-However, using topological indices and a tree state eliminates the need for flow control
-by creating locally linear, homogeneous computations.
+However, using topological indices and a tree state eliminates the
+need for flow control by creating locally linear, homogeneous
+computations.
 
 \section{Models}
 \label{sec:models}
