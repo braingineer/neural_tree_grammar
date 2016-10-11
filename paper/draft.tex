@@ -684,8 +684,8 @@ distinctions between classification decisions.
 %
 We report a modified edit distance measure, Generation String Accuracy, following \cite{bangalore2000evaluation}.
 %
-They argue that their measure correlates with NLG performance better
-than n-gram counting methods.
+%They argue that their measure correlates with NLG performance better
+%than n-gram counting methods.
 %
 Since linearization uses a beam search, we report statistics both for
 the top-ranked beam and for the empirically based beam among the
@@ -724,7 +724,7 @@ Fergus-R &  Structural &  67.62\% & 57.04\% & 0.30s \\ \cline{2-5}
   supertag classification directly output by the model and in the
   consistent global assignment output by A* decoding. Also shown is
   the median running time---which includes model computation and A*
-  search.}
+  search. The structural embeddings are computed with convolutional coding, the atomic embeddings as rows in a matrix, and the minimal embeddings as scalars in a vector.}
 \label{table:accresults}
 \end{table}
 
@@ -733,11 +733,13 @@ prediction.
 %
 All differences between model are significant using a Paired-Sample t-test ($p<10^{-5}$)
 %
-The flexible embedding methods perform consistently better,
+The structural and atomic embedding methods consistently perform better,
 suggesting that the clustering capabilities of neural methods is a
 crucial part of their effectiveness.
 %
-The convolution encoding seems to work better with Fergus-N.  
+With respect to the post-decoding performance, Fergus-N seems able to utilize the structural embeddings more than the atomic embeddings. 
+%Fergus-N seems to utilize the structural embeddings more, as its post-decoding performance is 
+%The convolution encoding seems to work better with Fergus-N.  
 %
 This merits further investigation: it might be because Fergus-N
 predicts one supertag as a function of another, and so the
@@ -746,6 +748,9 @@ important---or because Fergus-R's contextualized decisions depend on
 similarities among supertags (involving argument structure or
 information structure) that are difficult for the convolutional coding
 to represent or learn.
+%
+Additionally, the performance of the minimal embeddings suggests that Fergus-N's conditional architecture might provide enough structure to make some predictions greatly simplified. 
+%Fergus-N's conditional supertag predictions might also account for the performance of the minimal encoding method and 
 
 The overall best results come from Fergus-R, suggesting that it is
 worthwhile to take additional context into account in this task.
@@ -759,6 +764,7 @@ into account in decisions, it's especially advantageous in designing
 neural architectures to break a problem down into decisions that can
 be combined easily.
 
+
 Finally, decoding the network generally leads to lower accuracy.
 %
 It seems that our models are not doing a good job of using the
@@ -767,6 +773,8 @@ supertags.
 %
 This suggests that the models could be improved by taking more or
 better information into account in decoding.
+%
+This is more pronounced in the atomic embeddings than the structural embeddings, which suggests that the lack of structure in the vector representation allows for the model to learn clustering relationships that don't correlate with the structural requirements. 
 
 \begin{table}
 \centering
@@ -774,13 +782,13 @@ better information into account in decoding.
 \cline{3-4}
 \multicolumn{2}{}{} & \multicolumn{2}{|c|}{Accuracy}   \\ \hline
 \textbf{Model} & \textbf{Embedding}  & \textbf{Top Scoring} & \textbf{Best Performance} \\ \hline
-Fergus-N & Convolution & 65.80\% & 72.58\% \\ \cline{2-4}
-         & Token       & 65.52\%  & 71.82\% \\ \cline{2-4}
-         & Minimal Token & 63.79\% & 71.09\% \\ \cline{2-4}
+Fergus-N & Structural & 65.80\% & 72.58\% \\ \cline{2-4}
+         & Atomic       & 65.52\%  & 71.82\% \\ \cline{2-4}
+         & Minimal & 63.79\% & 71.09\% \\ \cline{2-4}
 \hline
-Fergus-R & Convolution & 68.22\% & 74.70\% \\ \cline{2-4}
-         & Token       &  69.29\% & 75.56\% \\ \cline{2-4}
-         & Minimal Token &  58.23\% & 65.04\% \\ \cline{2-4}
+Fergus-R & Structural & 68.22\% & 74.70\% \\ \cline{2-4}
+         & Atomic       &  69.29\% & 75.56\% \\ \cline{2-4}
+         & Minimal &  58.23\% & 65.04\% \\ \cline{2-4}
 \hline
 \end{tabular}
 \caption{Shown above as accuracy is the percentage of tokens in the linearized strings that are in correct positions according to an edit distance measure.}
@@ -790,6 +798,10 @@ Fergus-R & Convolution & 68.22\% & 74.70\% \\ \cline{2-4}
 Figure~\ref{table:linresults} shows the NLG evaluation results for the
 different models.
 %
+All differences in model are significant using an Independent\footnote{An Indepedent t-test was used instead of a Paired-Sample t-test because of intermittent failures during linearization that resulted in slightly different numbers of observations.} t-test ($p<10^{-5}$). 
+%
+For both models, the differences between structural embeddings (using convolutional coding) and atomic embeddings (using standard vector embedding techniques) were not significant, while the differences between the two embeddings and minimal embeddings were significant ($p<10^{-5}$). 
+%
 The performance confirms our expectation that differences in supertag
 accuracy after decoding correlate with NLG accuracy overall, but that
 differences in NLG performance are attenuated.
@@ -798,45 +810,45 @@ We note by comparison that Bangalore and Rambow report an accuracy of
 74.9\% in their best evaluation of FERGUS---on a data set of just 100
 sentences with an average length of 16.7.
 %
-Our evaluation, on 2400 sentences with an average length of 22, is much
+Our evaluation, on 2400 sentences with an average length of 22, is
 more strenuous.
 
 \section{Related Work}
 \label{sec:relatedwork}
 
-
-
-
 There are several lines of related work which explore stochastic tree
 models from the standpoint of parsing and understanding.
-%, including 
-%networks that maintain state using recurrences and networks that
-%agglomerate information using tree traversals.
 %
-We think the perspective given by NLG is instructive.
+While using the same methods, NLG has different goals and we think the perspective is instructive. 
 %
-Where parsing infers most probable underlying structure, generation infers the most likely way of expressing a semantic structure---with which unlabeled dependency trees have served as our proxy in this work. 
+Where parsing infers most probable underlying structure, generation infers the most likely way of expressing a semantic structure.
+%
+This divergence of goals leads to different concerns, alternatives, and emphasis. 
+%---which unlabeled dependency trees have served as our proxy in this work. 
 
 
 The works most similar to ours explicitly model tree structures, but focus on resolving the uncertainty invovled with the latent structure of an observed sentence. 
 %
-For example, the top down tree structure of \newcite{zhang2016top} expresses generation of a dependency structure as the decisions of a set of long short-term memory networks.  
+For example, the top down tree structure of \newcite{zhang2016top} expresses the generation of a dependency structure as the decisions of a set of long short-term memory networks.  
 %
-The competing solutions are different tree structures which generate a single linear form.
+For each decision, the possible options are different tree structures which can produce the target linear form.
 %
 In contrast, the generation problem is concerned with different linear forms that can result from the same tree structure. 
+%
+In more extensive tasks, the generation problem can include simulated interpretion to inform decisions; using the ease of structural inference from linear form quantifies the understandability of a sentence. 
 
 Although the methodology presented in this work is closely related to several recent neural networks models for long-distance relationships, it differs distinctly in its treatment of state and search.
 %
 Specifically, forward-planning in a generation task produces a growing horizon of syntactic choices while shrinking the horizon of semantic goals.
 %
-At each step, a generator will choose amongst more possible syntactic operations with a limited number of goals in mind. 
+At each step, syntactic operations grow the number of available syntactic choices while limiting the number of semantic goals left to express. 
 %
-In contrast, parsing and understanding begins with the surface form and constructs the organized semantic content, either for a downstream decision or for its own sake. 
+In contrast, parsing and understanding begin with the surface form and construct the organized semantic content, either for a downstream decision or just for the structure itself. 
 %
 The most notable works in this line of research are the recurrent neural network grammars \cite{dyer2016recurrent}, a shift-reduce parser and interpreter \cite{bowman2016fast}, and a dynamic network for composing other neural network modules \cite{Andreas2016LearningTC}. 
 %
-Interestingly, there is a common theme of using indexable data structures in neural architecture to make long-distance decisions. 
+Interestingly, there is a common theme of using indexable and dynamic data structures in neural architecture to make long-distance decisions. 
+
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -945,11 +957,11 @@ exact specifications in configuration files can be found in the code repository 
 \label{tab:params}
 \end{table}
 
-In this appendix, we describe some design decisions that took place which did not have a place in the paper but should still be reported.  In particular, this section covers the data processing, parameters used in the final model, and design decisions for the restricting the supertag distributions. 
+In this appendix, we describe some design decisions that took place which did not have a place in the paper but should still be reported.  In particular, this section covers the data processing, parameters used in the final model, and design decisions for the restricting the supertag distributions. As a reminder, the code, tex sources, and experimental setup are hosted on github\footnote{https://github.com/braingineer/neural\_tree\_grammar}.
 
 \subsection{Data}
 
-This work used data processed from the Wall Street Journal portion of the Treebank corpus. Specifically, section 02-21 were used for training, section 22 for development, and section 23 for testing.  The corpus was preprocessed using the Stanford Parser to fix some common issues as well as remove information extra to syntactic category.  The resulting parse trees were processed.  They were annotated with head rules that marked the head at each node in the parse tree and which nodes were dependents or adjuncts.  These annotated trees were split at adjunction and substitution positions to form the grammar.  For the dependency structures used in the models, we use the derivation tree formed by the grammar for each parse tree.  The derivation structures were further processed to parent-child pairs and top-down traversals for each of the models.  The preprocessing and processing code are distributed with this paper. 
+The corpus was preprocessed using the Stanford Parser to fix common issues and remove extraneous information.  The resulting parse trees were then annotated by marking the head words, the dependents, and the adjuncts.  The annotated trees were split at adjunction and substitution positions to form the grammar.  For the dependency structures used in the models, we use the derivation tree formed by the grammar for each parse tree.  Derivation trees were processed to parent-child pairs and top-down traversals for Fergus-N and Fergus-R.  All of these steps are released with the code. 
 
 \subsection{Model parameters}
 
@@ -957,13 +969,13 @@ All of the models were implemented in the Keras \cite{chollet2015keras} and Thea
 
 \subsection{Model design}
 
-To facilitate efficient model computation, we restricted the computation for supertag distributions and used vectorized functions.
+A subset of all supertags are used in supertag probability distribution calculations
 %
-The set of supertags that are retrieved for probability distribution computation are set of supertags that are seen paired with the lexical item, reducing the output distribution from over 5000 to under 500.  
+They are the set of supertags that are seen paired with the lexical item.
 %
-This was implemented as a set of indices to the embedding matrix passed into the computation with the rest of the data. 
+This reduces the output distribution from over 5000 to under 500.  
 %
-Future implementations will explore having the supertag subset lookup table be part of the computation.
+During computations, indices to the supertag embedding matrix are passed into the computation with the rest of the data. 
 %
 While there are several ways the affinity between supertag and lexical state vector could have been computed, we chose to concatenate the vectors, map them to a new space using a fully connected layer, and compute a score with a vectorized function.
 %
