@@ -31,7 +31,7 @@
 \begin{document}
 \maketitle
 
-\vspace*{-0.5cm}
+%\vspace*{-0.5cm}
 \begin{abstract}
 
 A key component in surface realization in natural language generation
@@ -55,7 +55,7 @@ techniques to improvements in both accuracy and run time.
 \end{abstract}
 
 \section{Introduction}
-\vspace*{-0.2cm}
+%\vspace*{-0.2cm}
 
 
 \blfootnote{
@@ -152,7 +152,7 @@ architectures to predict NLG choices.
 
 \section{Tree Grammars}
 \label{sec:tree}
-\vspace*{-0.2cm}
+%\vspace*{-0.2cm}
 
 Broadly, tree grammars are a family of tree rewriting formalisms that
 produce strings as a side effect of composing primitive
@@ -164,7 +164,7 @@ structures and operations for elementary trees and then inferring
 instances of those structures to match corpus data.
 
 \subsection{Grammar Formalism}
-\vspace*{-0.1cm}
+%\vspace*{-0.1cm}
 
 The canonical tree grammar is perhaps lexicalized tree-adjoining
 grammar (LTAG) \cite{joshi1991tree}.
@@ -203,7 +203,7 @@ Chiang's sister-adjunction allows for the flat structures in
 the Penn Treebank while limiting the formalism to context-free power.
 
 \subsection{Grammar Induction}
-\vspace*{-0.1cm}
+%\vspace*{-0.1cm}
 
 In lexicalized tree grammars, the lexicon and the grammatical rules
 are one and the same.
@@ -250,14 +250,14 @@ complexity by forcing it to follow Dirichlet or Pitman-Yor processes
 \caption{Embedding supertags using convolutional neural networks. In (A), a tree is encoded by its features and then embedded.
  In (B), convolutional layers are used to encode the supertag into a vector.}
  \label{fig:spineembedding}
-\vspace*{-0.5cm}
+%\vspace*{-0.5cm}
 \end{figure*}
 
 
 
 \section{Neural Representations}
 \label{sec:neural}
-\vspace*{-0.2cm}
+%\vspace*{-0.2cm}
 
 The grammar induction of \ref{sec:tree} allows us to construct an
 inventory of supertags to match a corpus.  For NLG, we also need to
@@ -279,7 +279,7 @@ well as local ones.
 We now describe these representations in more detail.
 
 \subsection{Embedding Supertags}
-\vspace{-0.1cm}
+%\vspace{-0.1cm}
 
 Different supertags for the same word can encode differences in the
 item's own combinatorial syntax, differences in argument structure, and
@@ -303,7 +303,7 @@ as a distinct token that indexes a corresponding learned vector.  This
 places no constraints on the learned similarity function, but it also
 ignores the hierarchical structure of the elementary trees
 themselves.  Previous work on deep learning with graph structures
-suggests convolutional neural networks can exploit similarities in structure.  Thus, we developed
+suggests convolutional neural networks can exploit similarities in structure \cite{niepert2016learning,kalchbrenner2014convolutional}.  Thus, we developed
 analogous techniques to encode supertags based on their underlying
 tree structure.  In particular, to embed a supertag, we embed each
 node, group the resulting vectors to form a tensor, and then summarize
@@ -358,12 +358,12 @@ Then, the embedding matrix $G_\Lambda$ is summarized from $T_\Lambda$ using the
 series of convolutional layers.
 
 
-\vspace*{-0.5cm}
+%\vspace*{-0.5cm}
 \begin{align}
 & T_\Lambda = [G_s(\Lambda_{syntactic~category});~G_r(\Lambda_{role})] \nonumber \\
 & G_\Lambda = C^{4,5}(C^{3,1}(C^{1,3}(C^{2,1}(C^{1,2}(T_\Lambda))))) \label{eq:embed}
 \end{align}
-\vspace*{-0.5cm}
+%\vspace*{-0.5cm}
 
 
 
@@ -381,14 +381,14 @@ Importantly, the convolutional layers are connected to the computational graph d
 %%%%
 \subsection{Recurrent Tree Networks}
 \label{subsec:rtn}
-\vspace{-0.1cm}
+%\vspace{-0.1cm}
 
 \begin{figure*}[tH!]
 \centering
 \includegraphics[width=0.8\textwidth]{rtn2.pdf}
 \caption{A recurrent tree network. (A) The dependency structure as a tree.  (B) the dependency structure as a sequence.}
  \label{fig:rtn}
-\vspace*{-0.5cm}
+%\vspace*{-0.5cm}
 \end{figure*}
 
 Our models predict supertags as a function of the target word and its
@@ -433,14 +433,14 @@ The resulting recurrent state is the hidden state for child node, $s_c$.
 The recurrent state $s_c$ is stored in the tree state, $S_{tree}$, at index $t$.
 
 
-\vspace*{-0.5cm}
+%\vspace*{-0.5cm}
 \begin{align}
        s_c~&=~RTN(x_t,p_t) \nonumber \\
            &=~g(x_t,S_{tree}[p_t]) \nonumber \\
            &=~g(x_t, s_p) \nonumber \\
 S_{tree}[t]&=~s_c \label{eq:rnnsetup}
 \end{align}
-\vspace*{-0.5cm}
+%\vspace*{-0.5cm}
 
 The use of topological indices allows for many recurrent tree networks to be
 run in parallel on a GPU, increasing the efficiency of the implementation.
@@ -455,7 +455,7 @@ by creating locally linear, homogeneous computations.
 
 \section{Models}
 \label{sec:models}
-\vspace*{-0.2cm}
+%\vspace*{-0.2cm}
 
 To analyze the representations we describe in \ref{sec:tree} and
 \ref{sec:neural}, we developed two alternative architectures for
@@ -488,7 +488,7 @@ stochastic tree modeling.
 %
 
 \subsection{Model 1: Fergus-N}
-\vspace{-0.1cm}
+%\vspace{-0.1cm}
 
 Fergus-N is a stochastic tree model which uses local parent-child information as inputs to a feed-forward network.
 %
@@ -507,11 +507,11 @@ the observed parent supertags for each parent-child pair, as formally
 defined in Eq. \ref{eq:fergusn_obj}.
 
 
-\vspace*{-0.55cm}
+%\vspace*{-0.55cm}
 \begin{align}
 &min_{\theta} -[\sum_p\sum_{p\to c} log[P_\theta(tag_{p} | lex_{p}, lex_{c}, tag_{c})] + \sum_c log[P_\theta(tag_{c} |lex_{p}, lex_{c})]] \label{eq:fergusn_obj}
 \end{align}
-\vspace*{-0.45cm}
+%\vspace*{-0.45cm}
 
 Here $tag_p$ is the parent
 supertag, $tag_c$ is the child supertag, $lex_p$ is the parent's
@@ -535,7 +535,7 @@ The vector states for the leaf nodes are similarly constructed, but instead comb
 The final operation induces a probability distribution over the treelet and leaf vectors using a score computed by the vectorized function, $\Psi_{predict}$, as the scalar in a softmax distribution. 
 
 
-\vspace*{-0.55cm}
+%\vspace*{-0.55cm}
 \begin{align}
 &\omega_{lex} = FC_1([G_w(lex_p); G_w(lex_c)]) \label{eq:fergusn} \\
 &\omega_{node}=concat([G_\Lambda(tag_c);~\omega_{lex}]) \nonumber \\
@@ -548,7 +548,7 @@ The final operation induces a probability distribution over the treelet and leaf
 \frac{exp(\Psi_{predict}(\omega_{leaf_i})))}
 {\sum_{j \in |tagset_c|} exp(\Psi_{predict}(\omega_{leaf_j})))} \nonumber 
 \end{align}
-\vspace*{-0.45cm}
+%\vspace*{-0.45cm}
 
 At generation time, we are given a full dependency tree.  A decoding
 step is necessary to compute a high probability
@@ -576,7 +576,7 @@ These resulting subtrees are placed into the priority queue and the algorithm it
 The search succeeds when the first complete tree has been found.\footnote{Although, the data has some noise so that sometimes there is no complete tree that can possibly be formed}
 
 \subsection{Model 2: Fergus-R}
-\vspace{-0.1cm}
+%\vspace{-0.1cm}
 
 Fergus-R is a stochastic tree model implemented in a top-down recurrent tree network and augmented with soft attention.
 %
@@ -595,11 +595,11 @@ Importantly, removing the conditional dependence on descendents' supertags
 results in the simplified objective function in Eq. \ref{eq:rtnobj} where $lex_C$ is the children's lexical information, $lex_p$ is the parent's lexical information, $tag_p$ is the supertag for the parent node, and $RTN$ is the recurrent tree network. 
 
 
-\vspace*{-0.55cm}
+%\vspace*{-0.55cm}
 \begin{align}
 &min_{\theta} -[\sum_{(p,C)} P_\theta(tag_{p}|RTN,~lex_p,~lex_{C})] \label{eq:rtnobj}
 \end{align}
-\vspace*{-0.45cm}
+%\vspace*{-0.45cm}
 
 The Fergus-R model uses only lexical information as input to calculate the probability distribution over each node's supertags. 
 %
@@ -618,7 +618,7 @@ A vector in this vector space is labeled $\omega_{elementary}$ because the combi
 The last step is to compute the probability of each supertag using the vectorized function, $\Psi_{predict}$.
 
 
-\vspace*{-0.55cm}
+%\vspace*{-0.55cm}
 \begin{align}
 &\omega_{C} = \Psi_{attn}(G_w(lex_C)) \label{eq:fergusr} \\
 &\omega_{lex} = FC_1(concat(\omega_{C},~G_w(lex_p))) \nonumber \\
@@ -628,7 +628,7 @@ The last step is to compute the probability of each supertag using the vectorize
 \frac{exp(\Psi_{predict}(\omega_{elementary_i})))}
 {\sum_{j \in |\Omega|} exp(\Psi_{predict}(\omega_{elementary_j))}} \nonumber
 \end{align}
-\vspace*{-0.45cm}
+%\vspace*{-0.45cm}
 
 Although the same A* algorithm from Fergus-N is used, the decoding for Fergus-R is far simpler.
 %
@@ -639,7 +639,7 @@ Where Fergus-N had to compute a incremental dynamic program to evaluate the insi
 The resulting setup is a chart parsing problem where the inside score of combining two consistent (non-conflicting) edges is just the sum of their inside scores. 
 
 \subsection{Linearization}
-\vspace{-0.1cm}
+%\vspace{-0.1cm}
 
 The final step to linearizing the output of Fergus-N and Fergus-R---a dependency tree annotated with supertags and partial attachment information---is a search over possible orderings with a language model. 
 %
@@ -668,7 +668,7 @@ The prefix tree is greedily searched with 32 beams.
 
 \section{Experiments}
 \label{sec:expt}
-\vspace*{-0.2cm}
+%\vspace*{-0.2cm}
 
 Using the representations of \ref{sec:neural}, the models of
 \ref{sec:models} can be instantiated in six different ways.  We can
@@ -682,7 +682,7 @@ supertag's tree structure to form a vector.
 In each case, the vector (a size-one vector in the \emph{mimimal} condition) is concatenated as described in \ref{sec:models}.
 
 \subsection{Training}
-\vspace{-0.1cm}
+%\vspace{-0.1cm}
 
 We trained six such models using a common experimental platform.  We
 started from the Wall Street Journal sections of the Penn Treebank,
@@ -708,7 +708,7 @@ description of network organization and training parameters is given
 in the appendix.  The code and complete experimental setup are publically available\footnote{\url{https://github.com/braingineer/neural_tree_grammar}}.
 
 \subsection{Performance Metrics}
-\vspace{-0.1cm}
+%\vspace{-0.1cm}
 
 
 We evaluate the performance of the models in several ways.  First, we
@@ -751,7 +751,7 @@ between speed and accuracy.
 
 \subsection{Results}
 \label{sec:results}
-\vspace*{-0.1cm}
+%\vspace*{-0.1cm}
 
 \begin{table}
 \centering
@@ -775,7 +775,7 @@ Fergus-R &  Structural &  67.62\% & 57.04\% & 0.30s \\ \cline{2-5}
   the median running time---which includes model computation and A*
   search. The structural embeddings are computed with convolutional coding, the atomic embeddings as rows in a matrix, and the minimal embeddings as scalars in a vector.}
 \label{table:accresults}
-\vspace*{-0.5cm}
+%\vspace*{-0.5cm}
 \end{table}
 
 Table \ref{table:accresults} shows the results of supertag
@@ -844,7 +844,7 @@ Fergus-R & Structural & 68.22\% & 74.70\% \\ \cline{2-4}
 \end{tabular}
 \caption{Shown above as accuracy is the percentage of tokens in the linearized strings that are in correct positions according to an edit distance measure.}
 \label{table:linresults}
-\vspace*{-0.5cm}
+%\vspace*{-0.5cm}
 \end{table}
 
 Figure~\ref{table:linresults} shows the NLG evaluation results for the
@@ -867,7 +867,7 @@ more strenuous.
 
 \section{Related Work}
 \label{sec:relatedwork}
-\vspace*{-0.2cm}
+%\vspace*{-0.2cm}
 
 There are several lines of related work which explore stochastic tree
 models from the standpoint of parsing and understanding.
@@ -905,7 +905,7 @@ Interestingly, there is a common theme of using indexable and dynamic data struc
 
 \section{Conclusion}
 \label{sec:conclusion}
-\vspace*{-0.2cm}
+%\vspace*{-0.2cm}
 
 This paper has explored issues in deep learning of probabilistic tree
 grammars from the standpoint of natural language generation.  
@@ -953,7 +953,7 @@ across linguistic structures and contexts---and, we hope, to build on
 and extend the provisional solutions we have explored here.
 
 \section*{Acknowledgments}
-\vspace*{-0.2cm}
+%\vspace*{-0.2cm}
 
 This research was supported in part by NSF IIS-1526723 and by a
 sabbatical leave from Rutgers to Stone.
@@ -964,7 +964,7 @@ sabbatical leave from Rutgers to Stone.
 
 \section{Appendix}
 \label{sec:appendix}
-\vspace{-0.2cm}
+%\vspace{-0.2cm}
 
 
 \begin{table}[t!]
@@ -1008,20 +1008,33 @@ Gradient clip threshold & 5.0 \\ \hline
 \caption{The parameters for the Fergus-R, Fergus-N, and language models.  The
 exact specifications in configuration files can be found in the code repository that accompanies this paper.}
 \label{tab:params}
-\vspace*{-0.5cm}
+%\vspace*{-0.5cm}
 \end{table}
 
 In this appendix, we describe some design decisions that took place which did not have a place in the paper but should still be reported.  In particular, this section covers the data processing, parameters used in the final model, and design decisions for the restricting the supertag distributions. As a reminder, the code, tex sources, and experimental setup are hosted on github\footnote{\url{https://github.com/braingineer/neural_tree_grammar}}.
 
 \subsection{Data}
-\vspace*{-0.1cm}
+%\vspace*{-0.1cm}
 
 The corpus was preprocessed using the Stanford Parser to fix common issues and remove extraneous information.  The resulting parse trees were then annotated by marking the head words, the dependents, and the adjuncts.  The annotated trees were split at adjunction and substitution positions to form the grammar.  For the dependency structures used in the models, we use the derivation tree formed by the grammar for each parse tree.  Derivation trees were processed to parent-child pairs and top-down traversals for Fergus-N and Fergus-R.  All of these steps are released with the code. 
 
 \subsection{Model parameters}
-\vspace*{-0.1cm}
+%\vspace*{-0.1cm}
 
 All of the models were implemented in the Keras \cite{chollet2015keras} and Theano \cite{theano} libraries.  The specific parameters that were used are shown in Table \ref{tab:params}.  The parameters were selected by measured performance on the development portion of the data set.  In the accompanying code repository, the full experiment parameters---including programmatic parameters controlling the experimental design---are specified in configuration files. 
+
+\subsection{Model design}
+A subset of all supertags are used in supertag probability distribution calculations
+%
+They are the set of supertags that are seen paired with the lexical item.
+%
+This reduces the output distribution from over 5000 to under 500.  
+%
+During computations, indices to the supertag embedding matrix are passed into the computation with the rest of the data. 
+%
+While there are several ways the affinity between supertag and lexical state vector could have been computed, we chose to concatenate the vectors, map them to a new space using a fully connected layer, and compute a score with a vectorized function.
+%
+The vectorized function operation is the same mechanism which calculates the probability distribution used in soft attention. 
  
 
 \newpage
