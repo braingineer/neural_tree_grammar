@@ -385,7 +385,7 @@ Importantly, the convolutional layers are connected to the computational graph d
 
 \begin{figure*}[tH!]
 \centering
-\includegraphics[width=\textwidth]{rtn.pdf}
+\includegraphics[width=0.8\textwidth]{rtn2.pdf}
 \caption{A recurrent tree network. (A) The dependency structure as a tree.  (B) the dependency structure as a sequence.}
  \label{fig:rtn}
 \vspace*{-0.5cm}
@@ -507,11 +507,11 @@ the observed parent supertags for each parent-child pair, as formally
 defined in Eq. \ref{eq:fergusn_obj}.
 
 
-\vspace*{-0.5cm}
+\vspace*{-0.55cm}
 \begin{align}
 &min_{\theta} -[\sum_p\sum_{p\to c} log[P_\theta(tag_{p} | lex_{p}, lex_{c}, tag_{c})] + \sum_c log[P_\theta(tag_{c} |lex_{p}, lex_{c})]] \label{eq:fergusn_obj}
 \end{align}
-\vspace*{-0.49cm}
+\vspace*{-0.45cm}
 
 Here $tag_p$ is the parent
 supertag, $tag_c$ is the child supertag, $lex_p$ is the parent's
@@ -535,7 +535,7 @@ The vector states for the leaf nodes are similarly constructed, but instead comb
 The final operation induces a probability distribution over the treelet and leaf vectors using a score computed by the vectorized function, $\Psi_{predict}$, as the scalar in a softmax distribution. 
 
 
-\vspace*{-0.5cm}
+\vspace*{-0.55cm}
 \begin{align}
 &\omega_{lex} = FC_1([G_w(lex_p); G_w(lex_c)]) \label{eq:fergusn} \\
 &\omega_{node}=concat([G_\Lambda(tag_c);~\omega_{lex}]) \nonumber \\
@@ -548,7 +548,7 @@ The final operation induces a probability distribution over the treelet and leaf
 \frac{exp(\Psi_{predict}(\omega_{leaf_i})))}
 {\sum_{j \in |tagset_c|} exp(\Psi_{predict}(\omega_{leaf_j})))} \nonumber 
 \end{align}
-\vspace*{-0.5cm}
+\vspace*{-0.45cm}
 
 At generation time, we are given a full dependency tree.  A decoding
 step is necessary to compute a high probability
@@ -595,11 +595,11 @@ Importantly, removing the conditional dependence on descendents' supertags
 results in the simplified objective function in Eq. \ref{eq:rtnobj} where $lex_C$ is the children's lexical information, $lex_p$ is the parent's lexical information, $tag_p$ is the supertag for the parent node, and $RTN$ is the recurrent tree network. 
 
 
-\vspace*{-0.5cm}
+\vspace*{-0.55cm}
 \begin{align}
 &min_{\theta} -[\sum_{(p,C)} P_\theta(tag_{p}|RTN,~lex_p,~lex_{C})] \label{eq:rtnobj}
 \end{align}
-\vspace*{-0.5cm}
+\vspace*{-0.45cm}
 
 The Fergus-R model uses only lexical information as input to calculate the probability distribution over each node's supertags. 
 %
@@ -618,7 +618,7 @@ A vector in this vector space is labeled $\omega_{elementary}$ because the combi
 The last step is to compute the probability of each supertag using the vectorized function, $\Psi_{predict}$.
 
 
-\vspace*{-0.5cm}
+\vspace*{-0.55cm}
 \begin{align}
 &\omega_{C} = \Psi_{attn}(G_w(lex_C)) \label{eq:fergusr} \\
 &\omega_{lex} = FC_1(concat(\omega_{C},~G_w(lex_p))) \nonumber \\
@@ -628,7 +628,7 @@ The last step is to compute the probability of each supertag using the vectorize
 \frac{exp(\Psi_{predict}(\omega_{elementary_i})))}
 {\sum_{j \in |\Omega|} exp(\Psi_{predict}(\omega_{elementary_j))}} \nonumber
 \end{align}
-\vspace*{-0.5cm}
+\vspace*{-0.45cm}
 
 Although the same A* algorithm from Fergus-N is used, the decoding for Fergus-R is far simpler.
 %
@@ -787,7 +787,7 @@ The structural and atomic embedding methods consistently perform better,
 suggesting that the clustering capabilities of neural methods is a
 crucial part of their effectiveness.
 %
-With respect to the post-decoding performance, Fergus-N seems able to utilize the structural embeddings more than the atomic embeddings. 
+For post-decoding performance, Fergus-N utilizes the structural embeddings more than the atomic embeddings. 
 %Fergus-N seems to utilize the structural embeddings more, as its post-decoding performance is 
 %The convolution encoding seems to work better with Fergus-N.  
 %
@@ -799,7 +799,7 @@ similarities among supertags (involving argument structure or
 information structure) that are difficult for the convolutional coding
 to represent or learn.
 %
-Additionally, the performance of the minimal embeddings suggests that Fergus-N's conditional architecture might provide enough structure to make some predictions greatly simplified. 
+Additionally, the minimal embeddings suggests that Fergus-N's architecture might provide enough structure to make some predictions greatly simplified. 
 %Fergus-N's conditional supertag predictions might also account for the performance of the minimal encoding method and 
 
 The overall best results come from Fergus-R, suggesting that it is
@@ -1008,6 +1008,7 @@ Gradient clip threshold & 5.0 \\ \hline
 \caption{The parameters for the Fergus-R, Fergus-N, and language models.  The
 exact specifications in configuration files can be found in the code repository that accompanies this paper.}
 \label{tab:params}
+\vspace*{-0.5cm}
 \end{table}
 
 In this appendix, we describe some design decisions that took place which did not have a place in the paper but should still be reported.  In particular, this section covers the data processing, parameters used in the final model, and design decisions for the restricting the supertag distributions. As a reminder, the code, tex sources, and experimental setup are hosted on github\footnote{\url{https://github.com/braingineer/neural_tree_grammar}}.
