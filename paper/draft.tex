@@ -210,7 +210,7 @@ are one and the same.
 %
 The set of possible grammatical moves which can be made are simultaneously the set of possible words which can be used next.
 %
-This means inducing a tree grammar from a data set is a matter of inferring the set of constructions in the data.
+This means that inducing a tree grammar from a data set is a matter of inferring the set of constructions in the data.
 
 %%%%\tabularnewline
 
@@ -303,7 +303,7 @@ as a distinct token that indexes a corresponding learned vector.  This
 places no constraints on the learned similarity function, but it also
 ignores the hierarchical structure of the elementary trees
 themselves.  Previous work on deep learning with graph structures
-suggests convolutional neural networks can exploit similarities in structure \cite{niepert2016learning,kalchbrenner2014convolutional}.  Thus, we developed
+suggests convolutional neural networks can exploit similarities in structure \cite{kalchbrenner2014convolutional,niepert2016learning}.  Thus, we developed
 analogous techniques to encode supertags based on their underlying
 tree structure.  In particular, to embed a supertag, we embed each
 node, group the resulting vectors to form a tensor, and then summarize
@@ -520,7 +520,8 @@ Equation \ref{eq:fergusn} details the model formulation.
 %
 The lexical material, $lex_p$ and $lex_c$, are embedded using the word embedding matrix, $G_w$, concatenated, and mapped to a new vector, $\omega_{lex}$, with a fully connected layer, $FC_1$.
 %
-The child supertag, $tag_c$, is embedded with $G_\Lambda$ and concatenated the lexical vector, $\omega_{lex}$, forming an intermediate vector representation of the node, $\omega_{node}$.
+The child supertag, $tag_c$, is embedded using the target supertag embedding
+$G_s$ and concatenated with the lexical vector, $\omega_{lex}$, forming an intermediate vector representation of the node, $\omega_{node}$.
 %
 The node vector is repeated for each of the parent's possible supertags, $tagset_p$, and then concatenated with their embeddings to construct the set of treelet vectors, $\Omega_{treelet}$.
 %
@@ -531,9 +532,9 @@ The final operation induces a probability distribution over the treelet and leaf
 %\vspace*{-0.55cm}
 \begin{align}
 &\omega_{lex} = FC_1([G_w(lex_p); G_w(lex_c)]) \label{eq:fergusn} \\
-&\omega_{node}=concat([G_\Lambda(tag_c);~\omega_{lex}]) \nonumber \\
-&\Omega_{treelet} = concat([repeat(\omega_{node}),~G_\Lambda(tagset_p)]) \nonumber \\
-&\Omega_{leaf} = concat([repeat(\omega_{lex}),~G_\Lambda(tagset_c)]) \nonumber \\
+&\omega_{node}=concat([G_s(tag_c);~\omega_{lex}]) \nonumber \\
+&\Omega_{treelet} = concat([repeat(\omega_{node}),~G_s(tagset_p)]) \nonumber \\
+&\Omega_{leaf} = concat([repeat(\omega_{lex}),~G_s(tagset_c)]) \nonumber \\
 &P_\theta(tag_{p,i} | lex_{p}, lex_{c}, tag_{c})=
 \frac{exp(\Psi_{predict}(\omega_{treelet_i})))}
 {\sum_{j \in |tagset_p|} exp(\Psi_{predict}(\omega_{treelet_j})))} \nonumber \\
@@ -549,7 +550,7 @@ supertags simultaneously.
 %
 In this process, tags for children must be chosen consistently with
 one another, and the resulting probabilistic information must be
-propagated upward to rerank tags higher in the tree.
+propagated upward to rerank tags elsewhere in the tree.
 %
 We solve this problem with an A* algorithm.
 %
@@ -611,7 +612,7 @@ The last step is to compute the probability of each supertag using the vectorize
 &\omega_{C} = \Psi_{attn}(G_w(lex_C)) \label{eq:fergusr} \\
 &\omega_{lex} = FC_1(concat(\omega_{C},~G_w(lex_p))) \nonumber \\
 &\omega_{node} = RTN(\omega_{lex},~topology) \nonumber \\
-&\Omega_{elementary} = FC_2(concat(repeat(\omega_{node}),~G_\Lambda(tagset_p))) \nonumber \\
+&\Omega_{elementary} = FC_2(concat(repeat(\omega_{node}),~G_s(tagset_p))) \nonumber \\
 &P_\theta(tag_{p,i}~|~RTN,~lex_p,~lex_{C}) = 
 \frac{exp(\Psi_{predict}(\omega_{elementary_i})))}
 {\sum_{j \in |\Omega|} exp(\Psi_{predict}(\omega_{elementary_j))}} \nonumber
@@ -631,8 +632,8 @@ The resulting setup is a chart parsing problem where the inside score of combini
 
 The final step to linearizing the output of Fergus-N and Fergus-R---a dependency tree annotated with supertags and partial attachment information---is a search over possible orderings with a language model. 
 %
-There are many possible orderings due to adjunction operation
-What remains to be determined is the order in which adjuncts are attached. 
+There are many possibilities, primarily due to ambiguities in insertion
+order.
 %
 Following \newcite{bangalore2000exploiting}, a language model is used to select between the alternate orderings. 
 %
@@ -667,7 +668,7 @@ embedding vector corresponding to each supertag; or
 \emph{structurally}, by using convolutional coding over each
 supertag's tree structure to form a vector.
 %
-In each case, the vector (a size-one vector in the \emph{mimimal} condition) is concatenated as described in \ref{sec:models}.
+In each case, the vector (a size-one vector in the minimal condition) is concatenated as described in \ref{sec:models}.
 
 \subsection{Training}
 %\vspace{-0.1cm}
@@ -690,11 +691,11 @@ dependency trees our models assume as input.
 From this input, we extracted the atomic supertag prediction instances
 and trained a network defined by each of the architectures of
 \ref{sec:models} and each of the supertag representations of
-\ref{sec:neural}.  As always, we used Section 02-21 for training,
-Sections 22 for development, and Section 23 for testing.  A complete
+\ref{sec:neural}.  As always, we used Sections 02-21 for training,
+Section 22 for development, and Section 23 for testing.  A complete
 description of network organization and training parameters is given
 in the appendix.  The code and complete experimental setup are
-publically
+publicly
 available.\footnote{\url{https://github.com/braingineer/neural_tree_grammar}}
 
 \subsection{Performance Metrics}
@@ -864,7 +865,9 @@ models from the standpoint of parsing and understanding.
 %
 While using the same methods, NLG has different goals and we think the perspective is instructive. 
 %
-Where parsing infers most probable underlying structure, generation infers the most likely way of expressing a semantic structure.
+Where parsing infers the most probable underlying structure,
+generation infers the most likely way of expressing a semantic
+structure.
 %
 This divergence of goals leads to different concerns, alternatives, and emphasis. 
 %---which unlabeled dependency trees have served as our proxy in this work. 
@@ -878,7 +881,7 @@ For each decision, the possible options are different tree structures which can 
 %
 In contrast, the generation problem is concerned with different linear forms that can result from the same tree structure. 
 %
-In more extensive tasks, the generation problem can include simulated interpretion to inform decisions; using the ease of structural inference from linear form quantifies the understandability of a sentence. 
+In more extensive tasks, the generation problem can include simulated interpretation to inform decisions; using the ease of structural inference from linear form quantifies the understandability of a sentence. 
 
 Although the methodology presented in this work is closely related to several recent neural networks models for long-distance relationships, it differs distinctly in its treatment of state and search.
 %
