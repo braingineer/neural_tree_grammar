@@ -62,7 +62,7 @@ techniques to improvements in both accuracy and run time.
     % % final paper: en-us version (to licence, a license)
     %
     \hspace{-0.65cm}  % space normally used by the marker
-    This work is licenced under a Creative Commons 
+    This work is licensed under a Creative Commons 
     Attribution 4.0 International License.
     License details:
     \url{http://creativecommons.org/licenses/by/4.0/}
@@ -789,7 +789,7 @@ similarities among supertags (involving argument structure or
 information structure) that are difficult for the convolutional coding
 to represent or learn.
 %
-Additionally, the minimal embeddings suggests that Fergus-N's architecture might provide enough structure to make some predictions greatly simplified. 
+Additionally, the minimal embeddings suggests that Fergus-N's architecture might provide enough structure to reduce the difficulty of a large number of cases. 
 %Fergus-N's conditional supertag predictions might also account for the performance of the minimal encoding method and 
 
 The overall best results come from Fergus-R, suggesting that it is
@@ -840,7 +840,7 @@ Fergus-R & Structural & 68.22\% & 74.70\% \\ \cline{2-4}
 Figure~\ref{table:linresults} shows the NLG evaluation results for the
 different models.
 %
-All differences in model are significant using an Independent\footnote{An Indepedent t-test was used instead of a Paired-Sample t-test because of intermittent failures during linearization that resulted in slightly different numbers of observations.} t-test ($p<10^{-5}$). 
+All differences in model are significant using an Independent t-test ($p<10^{-5}$).  \footnote{An Indepedent t-test was used instead of a Paired-Sample t-test because of intermittent failures during linearization that resulted in slightly different numbers of observations.}
 %
 For both models, the differences between structural embeddings (using convolutional coding) and atomic embeddings (using standard vector embedding techniques) were not significant, while the differences between the two embeddings and minimal embeddings were significant ($p<10^{-5}$). 
 %
@@ -852,7 +852,7 @@ We note by comparison that Bangalore and Rambow report an accuracy of
 74.9\% in their best evaluation of FERGUS---on a data set of just 100
 sentences with an average length of 16.7.
 %
-Our evaluation, on 2400 sentences with an average length of 22, is
+Our evaluation, on 2400 sentences with an average length of 22.1, is
 more strenuous.
 
 \section{Related Work}
@@ -870,7 +870,7 @@ This divergence of goals leads to different concerns, alternatives, and emphasis
 %---which unlabeled dependency trees have served as our proxy in this work. 
 
 
-The works most similar to ours explicitly model tree structures, but focus on resolving the uncertainty invovled with the latent structure of an observed sentence. 
+The works most similar to ours explicitly model tree structures, but focus on resolving the uncertainty involved with the latent structure of an observed sentence. 
 %
 For example, the top down tree structure of \newcite{zhang2016top} expresses the generation of a dependency structure as the decisions of a set of long short-term memory networks.  
 %
@@ -957,7 +957,8 @@ sabbatical leave from Rutgers to Stone.
 %\vspace{-0.2cm}
 
 
-\begin{table}[t!]
+\begin{table}[b!]
+\vspace{-0.1cm}
 \centering
 \begin{tabular}{lr}
 \begin{tabular}[t]{|p{6cm}|r|}
@@ -1010,8 +1011,7 @@ accompanying code repository, the full experiment
 parameters---including programmatic parameters controlling the
 experimental design---are specified in configuration files.
  
-In our experiments, the corpus was preprocessed using the Stanford
-Parser to fix common issues and remove extraneous information.  The
+In our experiments, the corpus was preprocessed using Stanford NLP tools \cite{de2006generating} to fix common issues and remove extraneous information.  The
 resulting parse trees were then analyzed to mark the head words, the
 dependents, and the adjuncts.  The marked-up trees were split at
 adjunction and substitution positions to form the grammar.  Our models
