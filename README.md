@@ -2,6 +2,12 @@
 > Brian McMahan and Matthew Stone, 2016 <br>
 > Presented at COLING, 2016
 
+## important
+
+Until I update this more fully, please be aware:
+
+1. This uses [my dev branch of keras](https://github.com/braingineer/keras/tree/dev)
+2. It also uses two helper libraries: [baal](https://github.com/braingineer/baal) and [ikelos](https://github.com/braingineer/ikelos)
 
 ## short blurb
 
