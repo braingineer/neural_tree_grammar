@@ -1,7 +1,7 @@
 # Syntactic realization with data-driven neural tree grammars
 > Brian McMahan and Matthew Stone, 2016 <br>
 > Presented at COLING, 2016 <br>
-> [Paper link (from repo)](https://github.com/braingineer/neural_tree_grammar/raw/master/paper/draft.pdf)
+> [Paper link (from repo)](https://github.com/braingineer/neural_tree_grammar/blob/master/paper/draft.pdf)
 
 ## important
 
